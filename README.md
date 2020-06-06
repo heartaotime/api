@@ -213,11 +213,15 @@ Content-Type: application/json;charset=UTF-8
     "param": {
         "userCode": "",
         "userName": ""
-    }
+    },
+    "pageNum": "1",
+    "pageSize": "10"
 }
 
   userCode:用户编码
   userName:用户名
+  pageNum:页码
+  pageSize:每页显示多少条
 ```
 
 + 设置用户拓展

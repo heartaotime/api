@@ -15,7 +15,7 @@ public class CommonRequest<T> {
 
     private Boolean pageFlag = true;
     private Integer pageNum = 1;
-    private Integer pageSize = 5;
+    private Integer pageSize = 10;
 
     private Boolean readRedis = true;
 

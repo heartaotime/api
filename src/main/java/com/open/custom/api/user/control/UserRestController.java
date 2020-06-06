@@ -1,5 +1,7 @@
 package com.open.custom.api.user.control;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.open.custom.api.app.model.OpenAppInfo;
 import com.open.custom.api.app.sevice.IOpenAppInfoService;
 import com.open.custom.api.bean.CommonRequest;
@@ -391,13 +393,16 @@ public class UserRestController {
     }
 
     @PostMapping(value = "/getUserList")
-    public CommonResponse<List<OpenUserInfoBean>> getUserList(@RequestBody CommonRequest<OpenUserInfo> commonRequest) {
-        CommonResponse<List<OpenUserInfoBean>> response = new CommonResponse();
+    public CommonResponse<PageInfo<OpenUserInfoBean>> getUserList(@RequestBody CommonRequest<OpenUserInfo> commonRequest) {
+        CommonResponse<PageInfo<OpenUserInfoBean>> response = new CommonResponse();
         String appCode = commonRequest.getAppCode();
 
         OpenUserInfo param = commonRequest.getParam();
         String userCode = param.getUserCode();
         String userName = param.getUserName();
+        Boolean pageFlag = commonRequest.getPageFlag();
+        Integer pageNum = commonRequest.getPageNum();
+        Integer pageSize = commonRequest.getPageSize();
 
         OpenUserInfoExample example = new OpenUserInfoExample();
         OpenUserInfoExample.Criteria criteria = example.createCriteria();
@@ -411,14 +416,40 @@ public class UserRestController {
         }
 
         example.setOrderByClause(" CREATE_DATE DESC, UPDATE_DATE DESC ");
+
+        if (pageFlag) {
+            PageHelper.startPage(pageNum, pageSize);
+        }
         List<OpenUserInfo> openUserInfos = iOpenUserInfoService.selectByExample(example);
         List<OpenUserInfoBean> openUserInfoBeans = new ArrayList<>();
         if (!CollectionUtils.isEmpty(openUserInfos)) {
             for (OpenUserInfo openUserInfo : openUserInfos) {
                 openUserInfoBeans.add(convertUser(openUserInfo));
             }
+
+            // 取分页信息
+            PageInfo<OpenUserInfo> pageInfo = new PageInfo<OpenUserInfo>(openUserInfos);
+            PageInfo<OpenUserInfoBean> pageInfoRes = new PageInfo<OpenUserInfoBean>(openUserInfoBeans);
+            pageInfoRes.setTotal(pageInfo.getTotal());
+            pageInfoRes.setPageNum(pageInfo.getPageNum());
+            pageInfoRes.setPageSize(pageInfo.getPageSize());
+            pageInfoRes.setSize(pageInfo.getSize());
+            pageInfoRes.setStartRow(pageInfo.getStartRow());
+            pageInfoRes.setEndRow(pageInfo.getEndRow());
+            pageInfoRes.setPages(pageInfo.getPages());
+            pageInfoRes.setPrePage(pageInfo.getPrePage());
+            pageInfoRes.setNextPage(pageInfo.getNextPage());
+            pageInfoRes.setIsFirstPage(pageInfo.isIsFirstPage());
+            pageInfoRes.setIsLastPage(pageInfo.isIsLastPage());
+            pageInfoRes.setHasPreviousPage(pageInfo.isHasPreviousPage());
+            pageInfoRes.setHasNextPage(pageInfo.isHasNextPage());
+            pageInfoRes.setNavigatePages(pageInfo.getNavigatePages());
+            pageInfoRes.setNavigatepageNums(pageInfo.getNavigatepageNums());
+            pageInfoRes.setNavigateFirstPage(pageInfo.getNavigateFirstPage());
+            pageInfoRes.setNavigateLastPage(pageInfo.getNavigateLastPage());
+            response.setData(pageInfoRes);
         }
-        response.setData(openUserInfoBeans);
+
         return response;
     }
 
@@ -486,7 +517,7 @@ public class UserRestController {
 
 
         OpenUserInfoExtWithBLOBs userInfoExt = iOpenUserInfoExtService.getUserExtInfoWithBLOBsByCode(userCode);
-        if(userInfoExt != null) {
+        if (userInfoExt != null) {
             response.setData(convertUser(userInfoExt));
         }
         return response;
