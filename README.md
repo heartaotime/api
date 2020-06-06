@@ -3,7 +3,7 @@
 ## 使用须知
 
 + 接口免费提供服务，请合理使用
-+ 为了防止接口滥用，调用接口需要提供 `appCode` ，所以使用接口前先邮件 `heartatime@foxmail.com` ，注册一个应用
++ 为了防止接口滥用，调用接口需要提供 `appCode` ，所以使用接口前先邮件 `heartaotime@foxmail.com` ，注册一个应用
 + 邮件中主要需要说明的模板如下（没有的填写暂无）：
   + 1.应用名称：
   + 2.应用描述：
@@ -200,3 +200,14 @@ Content-Type: application/json;charset=UTF-8
 * userCode:用户编码
 * verifyCode:验证码
 ```
+
++ 文件上传
+```
+### 文件上传
+POST https://www.myindex.top/api/common/v1/upload
+Content-Type: multipart/form-data;charset=UTF-8
+
+* appCode:应用编码
+* file:文件
+```
+![文件上传请求示例](https://www.myindex.top/file/myfile/uploadapi.png "文件上传请求示例")

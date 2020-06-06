@@ -102,8 +102,10 @@ userhome: /root
 
 
 uploadpath:
-  img: img/
-  imgtemp: imgtemp/
+  open: open/
+  opentemp: opentemp/
+
+baseUrl: https://www.myindex.top
 
 custCacheKey:
   OPEN_APP_INFO: OPEN_APP_INFO

@@ -8,10 +8,17 @@ public class DateUtils {
 
     public static final String DEFORT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
+    public static final String YYYYMMDD = "yyyyMMdd";
 
     public static String getCurDateStr() {
         Date now = new Date();
         SimpleDateFormat sf = new SimpleDateFormat(DEFORT_DATE_FORMAT);
+        return sf.format(now);
+    }
+
+    public static String getCurDateStr(String patten) {
+        Date now = new Date();
+        SimpleDateFormat sf = new SimpleDateFormat(patten);
         return sf.format(now);
     }
 

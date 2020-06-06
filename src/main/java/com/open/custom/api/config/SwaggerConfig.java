@@ -11,7 +11,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * Description: http://127.0.0.1:5000/swagger-ui.html
+ * Description: http://127.0.0.1:5000/api/swagger-ui.html
  * Author: huxintao
  * Date: 2020-05-14
  *

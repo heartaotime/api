@@ -45,7 +45,7 @@ public class ControllerAspect {
     private static final Set<String> nConvert2Json = new HashSet<>();
 
     {
-        nConvert2Json.add("com.mini.user.control.UserRestController.upload");
+        nConvert2Json.add("com.open.custom.api.common.control.CommonRestController.upload");
     }
 
     @Autowired
