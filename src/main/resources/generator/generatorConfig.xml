@@ -20,26 +20,7 @@
 
 
         <!-- 生成模型的包名和位置-->
-<!--        <javaModelGenerator targetPackage="com.open.custom.api.user.model" targetProject="src/main/java">-->
-<!--            <property name="enableSubPackages" value="true"/>-->
-<!--            <property name="trimStrings" value="true"/>-->
-<!--        </javaModelGenerator>-->
-<!--        &lt;!&ndash; 生成映射文件的包名和位置&ndash;&gt;-->
-<!--        <sqlMapGenerator targetPackage="mapping" targetProject="src/main/resources">-->
-<!--            <property name="enableSubPackages" value="true"/>-->
-<!--        </sqlMapGenerator>-->
-<!--        &lt;!&ndash; 生成DAO的包名和位置&ndash;&gt;-->
-<!--        <javaClientGenerator type="XMLMAPPER" targetPackage="com.open.custom.api.user.mapper" targetProject="src/main/java">-->
-<!--            <property name="enableSubPackages" value="true"/>-->
-<!--        </javaClientGenerator>-->
-
-<!--        &lt;!&ndash; 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名&ndash;&gt;-->
-<!--&lt;!&ndash;        <table tableName="STATISTICS_INFO" domainObjectName="StatisticsInfo" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>&ndash;&gt;-->
-<!--&lt;!&ndash;        <table tableName="STATIC_DATA" domainObjectName="StaticData" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>&ndash;&gt;-->
-<!--        <table tableName="OPEN_USER_INFO" domainObjectName="OpenUserInfo" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true"></table>-->
-
-
-        <javaModelGenerator targetPackage="com.open.custom.api.app.model" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.open.custom.api.user.model" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
@@ -48,14 +29,33 @@
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.open.custom.api.app.mapper" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.open.custom.api.user.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
         <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
-        <!--        <table tableName="STATISTICS_INFO" domainObjectName="StatisticsInfo" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
-        <!--        <table tableName="STATIC_DATA" domainObjectName="StaticData" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
-        <table tableName="OPEN_APP_INFO" domainObjectName="OpenAppInfo" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true"></table>
+<!--        <table tableName="STATISTICS_INFO" domainObjectName="StatisticsInfo" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+<!--        <table tableName="STATIC_DATA" domainObjectName="StaticData" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <table tableName="OPEN_USER_INFO_EXT" domainObjectName="OpenUserInfoExt" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true"></table>
+
+
+<!--        <javaModelGenerator targetPackage="com.open.custom.api.app.model" targetProject="src/main/java">-->
+<!--            <property name="enableSubPackages" value="true"/>-->
+<!--            <property name="trimStrings" value="true"/>-->
+<!--        </javaModelGenerator>-->
+<!--        &lt;!&ndash; 生成映射文件的包名和位置&ndash;&gt;-->
+<!--        <sqlMapGenerator targetPackage="mapping" targetProject="src/main/resources">-->
+<!--            <property name="enableSubPackages" value="true"/>-->
+<!--        </sqlMapGenerator>-->
+<!--        &lt;!&ndash; 生成DAO的包名和位置&ndash;&gt;-->
+<!--        <javaClientGenerator type="XMLMAPPER" targetPackage="com.open.custom.api.app.mapper" targetProject="src/main/java">-->
+<!--            <property name="enableSubPackages" value="true"/>-->
+<!--        </javaClientGenerator>-->
+
+<!--        &lt;!&ndash; 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名&ndash;&gt;-->
+<!--        &lt;!&ndash;        <table tableName="STATISTICS_INFO" domainObjectName="StatisticsInfo" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>&ndash;&gt;-->
+<!--        &lt;!&ndash;        <table tableName="STATIC_DATA" domainObjectName="StaticData" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>&ndash;&gt;-->
+<!--        <table tableName="OPEN_APP_INFO" domainObjectName="OpenAppInfo" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true"></table>-->
 
 
 

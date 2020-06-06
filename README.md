@@ -201,6 +201,63 @@ Content-Type: application/json;charset=UTF-8
 * verifyCode:验证码
 ```
 
+
++ 获取用户
+```
+### 获取用户
+POST https://www.myindex.top/api/user/v1/getUserList
+Content-Type: application/json;charset=UTF-8
+
+{
+    "appCode": "",
+    "param": {
+        "userCode": "",
+        "userName": ""
+    }
+}
+
+  userCode:用户编码
+  userName:用户名
+```
+
++ 设置用户拓展
+```
+### 设置用户拓展
+POST https://www.myindex.top/api/user/v1/setUserExtInfo
+Content-Type: application/json;charset=UTF-8
+
+{
+    "appCode": "",
+    "param": {
+        "userCode": "",
+        "userSet": "",
+        "userSet1": "",
+        "userSet2": ""
+    }
+}
+
+* userCode:用户编码
+* userSet:用户设置（支持字符串，比如json格式的字符串 {\"test\": \"123\"} ）
+  userSet1:用户设置1（支持字符串，比如json格式的字符串 {\"test\": \"123\"} ）
+  userSet2:用户设置2（支持字符串，比如json格式的字符串 {\"test\": \"123\"} ）
+```
+
++ 获取用户拓展
+```
+### 获取用户拓展
+POST https://www.myindex.top/api/user/v1/getUserExtInfo
+Content-Type: application/json;charset=UTF-8
+
+{
+    "appCode": "",
+    "param": {
+        "userCode": ""
+    }
+}
+
+* userCode:用户编码
+```
+
 + 文件上传
 ```
 ### 文件上传

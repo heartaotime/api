@@ -8,8 +8,12 @@ import com.open.custom.api.exception.BusiException;
 import com.open.custom.api.service.RedisService;
 import com.open.custom.api.user.model.OpenUserInfo;
 import com.open.custom.api.user.model.OpenUserInfoExample;
+import com.open.custom.api.user.model.OpenUserInfoExt;
+import com.open.custom.api.user.model.OpenUserInfoExtWithBLOBs;
 import com.open.custom.api.user.model.bean.OpenUserInfoBean;
+import com.open.custom.api.user.model.bean.OpenUserInfoExtBean;
 import com.open.custom.api.user.model.extend.OpenUserInfoExtend;
+import com.open.custom.api.user.sevice.IOpenUserInfoExtService;
 import com.open.custom.api.user.sevice.IOpenUserInfoService;
 import com.open.custom.api.utils.DateUtils;
 import org.slf4j.Logger;
@@ -26,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -40,6 +44,9 @@ public class UserRestController {
 
     @Autowired
     private IOpenUserInfoService iOpenUserInfoService;
+
+    @Autowired
+    private IOpenUserInfoExtService iOpenUserInfoExtService;
 
     @Autowired
     private IOpenAppInfoService iOpenAppInfoService;
@@ -180,6 +187,12 @@ public class UserRestController {
             try {
                 String appName = openAppInfo.getAppName();
 
+                OpenUserInfoExample example = new OpenUserInfoExample();
+                OpenUserInfoExample.Criteria criteria = example.createCriteria();
+                criteria.andStateEqualTo(1);
+                criteria.andAppCodeEqualTo(appCode);
+                int allCount = iOpenUserInfoService.countByExample(example);
+
                 SimpleMailMessage message = new SimpleMailMessage();
                 message.setFrom(mailUserName);
                 message.setTo(mailUserName);
@@ -190,7 +203,7 @@ public class UserRestController {
                                 "\n    用户名：" + userInfo.getUserName() +
                                 "\n    邮箱：" + userInfo.getEmail() +
                                 "\n    注册时间：" + DateUtils.getDateStr(userInfo.getCreateDate()) +
-                                "\n    总注册用户数：" + userInfo.getId());
+                                "\n    总注册用户数：" + allCount);
                 mailSender.send(message);
             } catch (Exception e) {
                 log.error("sendEMail catch Exception {}", e);
@@ -377,6 +390,115 @@ public class UserRestController {
         return response;
     }
 
+    @PostMapping(value = "/getUserList")
+    public CommonResponse<List<OpenUserInfoBean>> getUserList(@RequestBody CommonRequest<OpenUserInfo> commonRequest) {
+        CommonResponse<List<OpenUserInfoBean>> response = new CommonResponse();
+        String appCode = commonRequest.getAppCode();
+
+        OpenUserInfo param = commonRequest.getParam();
+        String userCode = param.getUserCode();
+        String userName = param.getUserName();
+
+        OpenUserInfoExample example = new OpenUserInfoExample();
+        OpenUserInfoExample.Criteria criteria = example.createCriteria();
+        criteria.andStateEqualTo(1);
+        criteria.andAppCodeEqualTo(appCode);
+        if (!StringUtils.isEmpty(userCode)) {
+            criteria.andUserCodeEqualTo(userCode);
+        }
+        if (!StringUtils.isEmpty(userName)) {
+            criteria.andUserNameEqualTo(userName);
+        }
+
+        example.setOrderByClause(" CREATE_DATE DESC, UPDATE_DATE DESC ");
+        List<OpenUserInfo> openUserInfos = iOpenUserInfoService.selectByExample(example);
+        List<OpenUserInfoBean> openUserInfoBeans = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(openUserInfos)) {
+            for (OpenUserInfo openUserInfo : openUserInfos) {
+                openUserInfoBeans.add(convertUser(openUserInfo));
+            }
+        }
+        response.setData(openUserInfoBeans);
+        return response;
+    }
+
+
+    @PostMapping(value = "/setUserExtInfo")
+    public CommonResponse<String> setUserExtInfo(@RequestBody CommonRequest<OpenUserInfoExtWithBLOBs> commonRequest) {
+        CommonResponse<String> response = new CommonResponse();
+        String appCode = commonRequest.getAppCode();
+
+        OpenUserInfoExtWithBLOBs param = commonRequest.getParam();
+
+        String userCode = param.getUserCode();
+        String userSet = param.getUserSet();
+        String userSet1 = param.getUserSet1();
+        String userSet2 = param.getUserSet2();
+        String remark = param.getRemark();
+
+        if (StringUtils.isEmpty(userCode) || StringUtils.isEmpty(userSet)) {
+            throw new BusiException("请求参数不能为空");
+        }
+
+        OpenUserInfo userInfo = iOpenUserInfoService.getUserByCode(userCode);
+        if (userInfo == null) {
+            throw new BusiException("该用户不存在[" + userCode + "]");
+        }
+
+        int i = 0;
+
+        OpenUserInfoExtWithBLOBs upUser = new OpenUserInfoExtWithBLOBs();
+        upUser.setUserSet(userSet);
+        upUser.setUserSet1(userSet1);
+        upUser.setUserSet2(userSet2);
+        upUser.setRemark(remark);
+
+        OpenUserInfoExt userInfoExt = iOpenUserInfoExtService.getUserExtInfoByCode(userCode);
+        if (userInfoExt == null) {
+            upUser.setUserId(userInfo.getId());
+            upUser.setUserCode(userCode);
+            upUser.setState(1);
+            upUser.setCreateDate(new Date());
+            i = iOpenUserInfoExtService.insertSelective(upUser);
+        } else {
+            upUser.setId(userInfoExt.getId());
+            upUser.setUpdateDate(new Date());
+            i = iOpenUserInfoExtService.updateByPrimaryKeySelective(upUser);
+        }
+        if (i < 1) {
+            throw new BusiException("更新/新增失败");
+        }
+        return response;
+    }
+
+    @PostMapping(value = "/getUserExtInfo")
+    public CommonResponse<OpenUserInfoExtBean> getUserExtInfo(@RequestBody CommonRequest<OpenUserInfoExt> commonRequest) {
+        CommonResponse<OpenUserInfoExtBean> response = new CommonResponse();
+        String appCode = commonRequest.getAppCode();
+
+        OpenUserInfoExt param = commonRequest.getParam();
+
+        String userCode = param.getUserCode();
+
+        if (StringUtils.isEmpty(userCode)) {
+            throw new BusiException("请求参数不能为空");
+        }
+
+
+        OpenUserInfoExtWithBLOBs userInfoExt = iOpenUserInfoExtService.getUserExtInfoWithBLOBsByCode(userCode);
+        if(userInfoExt != null) {
+            response.setData(convertUser(userInfoExt));
+        }
+        return response;
+    }
+
+    private static OpenUserInfoExtBean convertUser(OpenUserInfoExtWithBLOBs data) {
+        OpenUserInfoExtBean bean = new OpenUserInfoExtBean();
+        BeanUtils.copyProperties(data, bean);
+        bean.setCreateDate(DateUtils.getDateStr(data.getCreateDate()));
+        bean.setUpdateDate(DateUtils.getDateStr(data.getUpdateDate()));
+        return bean;
+    }
 
     private static OpenUserInfoBean convertUser(OpenUserInfo data) {
         OpenUserInfoBean bean = new OpenUserInfoBean();
