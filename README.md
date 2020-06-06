@@ -53,6 +53,18 @@ Content-Type: application/json;charset=UTF-8
     "data": null
 }
 ```
+#### 目前所有接口列表
+- 校验用户名或邮箱是否已注册
+- 发送验证码邮件
+- 注册用户
+- 用户登陆
+- 更新用户信息
+- 修改登陆密码
+- 注销用户
+- 获取用户
+- 设置用户拓展信息
+- 获取用户拓展信息
+- 文件上传
 
 ### 提供的接口如下 （参数标记 * 为必传）
 
@@ -224,7 +236,7 @@ Content-Type: application/json;charset=UTF-8
   pageSize:每页显示多少条
 ```
 
-+ 设置用户拓展
++ 设置用户拓展信息
 ```
 ### 设置用户拓展
 POST https://www.myindex.top/api/user/v1/setUserExtInfo
@@ -246,7 +258,7 @@ Content-Type: application/json;charset=UTF-8
   userSet2:用户设置2（支持字符串，比如json格式的字符串 {\"test\": \"123\"} ）
 ```
 
-+ 获取用户拓展
++ 获取用户拓展信息
 ```
 ### 获取用户拓展
 POST https://www.myindex.top/api/user/v1/getUserExtInfo
