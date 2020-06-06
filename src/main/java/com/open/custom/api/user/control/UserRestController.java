@@ -164,6 +164,9 @@ public class UserRestController {
         userInfo.setUserName(userName);
         userInfo.setPassWord(passWord);
         userInfo.setEmail(email);
+        userInfo.setBirthday(DateUtils.parseDate(param.getBirthdayStr(), DateUtils.YYYY_MM_DD));
+        userInfo.setNickName(param.getNickName());
+        userInfo.setRemark(param.getRemark());
         userInfo.setCreateDate(new Date());
         userInfo.setState(1);
         int save = iOpenUserInfoService.insertSelective(userInfo);
