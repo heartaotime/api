@@ -11,8 +11,7 @@
   + 4.你的邮箱：
   + 5.其他：
 + 如果你感觉这个功能还行，欢迎捐赠哦：
-  + 支付宝：![支付宝](https://www.myindex.top/file/myfile/zfb.png "支付宝")
-  + 微信：![微信](https://www.myindex.top/file/myfile/wx.png "微信")
+  + 支付宝：![支付宝](https://www.myindex.top/file/myfile/zfb.png "支付宝") 微信：![微信](https://www.myindex.top/file/myfile/wx.png "微信")
 
 ### 接口调用相关
 > 目前暂时提供一个测试专用 `appCode=b198c18f49354a51984581cc124d985b` 
