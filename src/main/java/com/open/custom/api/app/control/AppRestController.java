@@ -1,6 +1,7 @@
 package com.open.custom.api.app.control;
 
 import com.open.custom.api.app.model.OpenAppInfo;
+import com.open.custom.api.app.model.OpenAppInfoExample;
 import com.open.custom.api.app.sevice.IOpenAppInfoService;
 import com.open.custom.api.bean.CommonRequest;
 import com.open.custom.api.bean.CommonResponse;
@@ -44,6 +45,9 @@ public class AppRestController {
     @Value("${spring.mail.username}")
     private String mailUserName;
 
+    @Value("${custCacheKey.OPEN_APP_INFO}")
+    private String OPEN_APP_INFO;
+
     @PostMapping(value = "/saveApp")
     public CommonResponse<String> saveApp(@RequestBody CommonRequest<OpenAppInfo> commonRequest) {
         CommonResponse response = new CommonResponse();
@@ -70,6 +74,15 @@ public class AppRestController {
         if (i < 1) {
             throw new BusiException("保存失败");
         }
+
+        // 更新 redis 信息
+        redisService.del(OPEN_APP_INFO);
+
+        OpenAppInfoExample example = new OpenAppInfoExample();
+        OpenAppInfoExample.Criteria criteria = example.createCriteria();
+        criteria.andStateEqualTo(1);
+        redisService.set(OPEN_APP_INFO, iOpenAppInfoService.selectByExample(example));
+
         return response;
     }
 
