@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(value = "*")
 @RequestMapping(value = "/common/v1")
 public class CommonRestController {
 
