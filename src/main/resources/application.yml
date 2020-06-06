@@ -1,0 +1,134 @@
+server:
+  port: 5000
+  servlet:
+    context-path: /api
+
+spring:
+  profiles:
+    active: dev
+  resources:
+    static-locations: classpath:/html
+
+  datasource:
+    name: mysql-app
+    url: jdbc:mysql://127.0.0.1:3306/app?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 1qaz!QAZ
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+
+  redis:
+    #数据库索引
+    #database: 0
+    host: 127.0.0.1
+    password: 1qaz!QAZ2wsx@WSX
+    port: 6000
+    jedis:
+      #最大连接数据库连接数,设 0 为没有限制
+      max-active: 8
+      #最大等待连接中的数量,设 0 为没有限制
+      max-idle: 8
+      #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
+      max-wait: -1
+      #最小等待连接中的数量,设 0 为没有限制
+      min-idle: 0
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 200MB
+
+  mail:
+    host: smtp.qq.com
+    username: heartaotime@foxmail.com
+    password: cnkrrlcpbkykgeif
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+
+
+mybatis:
+  mapper-locations: classpath:mapping/*.xml,classpath:mapping/extend/*.xml
+
+#配置分页插件pagehelper
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+
+sftp:
+  # 端口
+  port: 22
+  # 服务器地址
+  host: 127.0.0.1
+  # 账号
+  userName: root
+  # 密码
+  password: 1qaz!QAZ
+  # 文件存储的根路径
+  basePath: /file/
+  # session连接超时时间
+  sessionConnectTimeout: 30000
+  # channel连接超时时间
+  channelConnectedTimeout: 30000
+  # 协议
+  protocol: sftp
+
+
+userhome: /root
+
+
+uploadpath:
+  img: img/
+  imgtemp: imgtemp/
+
+custCacheKey:
+  OPEN_APP_INFO: OPEN_APP_INFO
+
+
+
+
+---
+#dev environment
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://139.186.66.121:3306/app?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+
+  redis:
+    host: 139.186.66.121
+
+sftp:
+  host: 139.186.66.121
+
+
+
+---
+#prod environment
+spring:
+  profiles: prod
+
+
