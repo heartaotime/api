@@ -2,7 +2,9 @@ package com.open.custom.api.aspect;
 
 
 import com.google.gson.Gson;
+import com.open.custom.api.app.model.OpenApiAccessWithBLOBs;
 import com.open.custom.api.app.model.OpenAppInfo;
+import com.open.custom.api.app.sevice.IOpenApiAccessService;
 import com.open.custom.api.app.sevice.IOpenAppInfoService;
 import com.open.custom.api.bean.CommonRequest;
 import com.open.custom.api.bean.CommonResponse;
@@ -17,16 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Description: 日志拦截器
@@ -50,6 +50,10 @@ public class ControllerAspect {
 
     @Autowired
     private IOpenAppInfoService iOpenAppInfoService;
+
+
+    @Autowired
+    private IOpenApiAccessService iOpenApiAccessService;
 
 
     /**
@@ -82,16 +86,28 @@ public class ControllerAspect {
         }
         HttpServletRequest request = sra.getRequest();
 
-        logger.info("URL : " + request.getRequestURL().toString());
-        logger.info("HTTP_METHOD : " + request.getMethod());
-        logger.info("IP : " + request.getRemoteAddr());
+        String requestURL = request.getRequestURL().toString();
+        String method = request.getMethod();
+        String remoteAddr = request.getRemoteAddr();
         String classMethod = pjp.getSignature().getDeclaringTypeName() + "." + pjp.getSignature().getName();
+
+        // String appCode = request.getHeader("Authorization");
+
+        logger.info("URL : " + requestURL);
+        logger.info("HTTP_METHOD : " + method);
+        logger.info("IP : " + remoteAddr);
         logger.info("CLASS_METHOD : " + classMethod);
 
+        String requestParam = "";
+        String responseStr = "";
+
         if (!nConvert2Json.contains(classMethod)) {
-            logger.info("REQUEST ARGS : " + gson.toJson(pjp.getArgs()));
+            Object[] args = pjp.getArgs();
+            requestParam = gson.toJson(pjp.getArgs());
+            logger.info("REQUEST ARGS : " + requestParam);
         } else {
-            logger.info("REQUEST ARGS : " + Arrays.toString(pjp.getArgs()));
+            requestParam = Arrays.toString(pjp.getArgs());
+            logger.info("REQUEST ARGS : " + requestParam);
             Enumeration<String> enu = request.getParameterNames();
             int i = 1;
             while (enu.hasMoreElements()) {
@@ -113,12 +129,47 @@ public class ControllerAspect {
             response = new CommonResponse("999", "未知异常：" + e.getMessage());
         } finally {
             // 3.出参打印
-            logger.info("RESPONSE : {}", response != null ? gson.toJson(response) : "");
+            responseStr = response != null ? gson.toJson(response) : null;
+            logger.info("RESPONSE : {}", responseStr);
 
             long endTime = System.currentTimeMillis();
             logger.info("SPEND TIME : {}ms\n", (endTime - startTime));
+
+            // 记录接口日志
+            saveAccess(pjp, method, remoteAddr, classMethod, requestParam, responseStr);
         }
         return response;
+    }
+
+    private void saveAccess(ProceedingJoinPoint pjp, String method, String remoteAddr, String classMethod, String requestParam, String responseStr) {
+        try {
+            OpenApiAccessWithBLOBs record = new OpenApiAccessWithBLOBs();
+            record.setApiMethod(classMethod.substring(classMethod.lastIndexOf(".") + 1));
+            record.setApiMethodClass(classMethod);
+            record.setApiRequest(requestParam);
+            record.setApiResponse(responseStr);
+            record.setClientIp(remoteAddr);
+            record.setHttpMethod(method);
+            record.setAccessDate(new Date());
+            if (pjp.getArgs() != null && pjp.getArgs()[0] != null) {
+                Object arg = pjp.getArgs()[0];
+                if (arg instanceof CommonRequest) {
+                    CommonRequest commonRequest = (CommonRequest) arg;
+                    record.setAppCode(commonRequest.getAppCode());
+                    Object param = commonRequest.getParam();
+                    if (param != null) {
+                        Map map = gson.fromJson(gson.toJson(param), Map.class);
+                        if (!CollectionUtils.isEmpty(map)) {
+                            Object userCode = map.get("userCode");
+                            record.setUserCode(userCode == null ? null : userCode.toString());
+                        }
+                    }
+                }
+            }
+            iOpenApiAccessService.insertSelective(record);
+        } catch (Exception e) {
+            logger.error("saveAccess catch Exception, {}", e);
+        }
     }
 
     @Before(value = "userControllerAspect()")
@@ -128,18 +179,31 @@ public class ControllerAspect {
             throw new BusiException("请求参数不能为空");
         }
 
-        String argsStr = gson.toJson(args[0]);
-
-        CommonRequest commonRequest = gson.fromJson(argsStr, CommonRequest.class);
-        if (commonRequest == null) {
-            throw new BusiException("请求参数不能为空");
+        Object arg = args[0];
+        if (arg instanceof CommonRequest) {
+            CommonRequest commonRequest = (CommonRequest) arg;
+            if (commonRequest == null) {
+                throw new BusiException("请求参数不能为空");
+            }
+            String appCode = commonRequest.getAppCode();
+            if (StringUtils.isEmpty(appCode)) {
+                throw new BusiException("appCode不能为空");
+            }
+            iOpenAppInfoService.assertAppCode(appCode);
         }
-        String appCode = commonRequest.getAppCode();
-        if (StringUtils.isEmpty(appCode)) {
-            throw new BusiException("appCode不能为空");
-        }
 
-        OpenAppInfo openAppInfo = iOpenAppInfoService.assertAppCode(appCode);
+//        String argsStr = gson.toJson(args[0]);
+
+//        CommonRequest commonRequest = gson.fromJson(argsStr, CommonRequest.class);
+//        if (commonRequest == null) {
+//            throw new BusiException("请求参数不能为空");
+//        }
+//        String appCode = commonRequest.getAppCode();
+//        if (StringUtils.isEmpty(appCode)) {
+//            throw new BusiException("appCode不能为空");
+//        }
+//
+//        OpenAppInfo openAppInfo = iOpenAppInfoService.assertAppCode(appCode);
 
 //        Integer count = iOpenAppInfoService.checkAppExist(appCode);
 //        if (count == null || count < 1) {

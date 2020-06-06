@@ -1,0 +1,171 @@
+
+
+
+### 校验用户是否存在
+POST https://www.myindex.top/api/user/v1/checkUserExist
+Content-Type: application/json;charset=UTF-8
+
+{
+    "appCode": "b198c18f49354a51984581cc124d985b",
+    "param": {
+        "userName": "heartaotime"
+    }
+}
+
+###
+POST {{host}}/api/app/v1/saveApp
+Content-Type: application/json;charset=UTF-8
+
+{
+    "param": {
+        "appName": "测试专用",
+        "appDesc": "此处为应用描述",
+        "appUrl": "https://www.myindex.top/",
+        "email": "heartaotime@foxmail.com"
+    }
+}
+
+### 校验用户是否存在
+POST {{host}}/api/user/v1/checkUserExist
+Content-Type: application/json;charset=UTF-8
+Authorization: b198c18f49354a51984581cc124d985b
+
+{
+    "appCode": "b198c18f49354a51984581cc124d985b",
+    "param": {
+        "userName": "heartaotime",
+        "userCode": "123"
+    }
+}
+
+
+### 发送验证码邮件
+POST {{host}}/api/user/v1/sendEMail
+Content-Type: application/json;charset=UTF-8
+
+{
+    "appCode": "b198c18f49354a51984581cc124d985b",
+    "param": {
+        "email": "heartaotime@foxmail.com"
+    }
+}
+
+
+### 注册用户
+POST {{host}}/api/user/v1/registUser
+Content-Type: application/json;charset=UTF-8
+
+{
+    "appCode": "b198c18f49354a51984581cc124d985b",
+    "param": {
+        "userName": "heartaotime",
+        "passWord": "1",
+        "email": "heartaotime@foxmail.com",
+        "verifyCode": "7967",
+        "birthday": "",
+        "nickName": "",
+        "remark": ""
+    }
+}
+
+
+### 用户登陆
+POST {{host}}/api/user/v1/loginUser
+Content-Type: application/json;charset=UTF-8
+
+{
+    "appCode": "b198c18f49354a51984581cc124d985b",
+    "param": {
+        "userName": "heartaotime",
+        "passWord": "1"
+    }
+}
+
+
+
+### 更新用户信息
+POST {{host}}/api/user/v1/updateUser
+Content-Type: application/json;charset=UTF-8
+
+{
+    "appCode": "b198c18f49354a51984581cc124d985b",
+    "param": {
+        "userCode": "aa7b5ddb62a94d728382bdbe7e808875",
+        "userName": "heartaotime",
+        "birthday": "2020-12-14",
+        "verifyCode": "0892"
+    }
+}
+
+### 修改登陆密码
+POST {{host}}/api/user/v1/modifyUserPwd
+Content-Type: application/json;charset=UTF-8
+
+{
+    "appCode": "b198c18f49354a51984581cc124d985b",
+    "param": {
+        "userCode": "aa7b5ddb62a94d728382bdbe7e808875",
+        "passWord": "1",
+        "verifyCode": "3262"
+    }
+}
+
+### 注销用户
+POST {{host}}/api/user/v1/deleteUser
+Content-Type: application/json;charset=UTF-8
+
+{
+    "appCode": "b198c18f49354a51984581cc124d985b",
+    "param": {
+        "userCode": "aa7b5ddb62a94d728382bdbe7e808875",
+        "verifyCode": "0892"
+    }
+}
+
+
+### 获取用户
+POST {{host}}/api/user/v1/getUserList
+Content-Type: application/json;charset=UTF-8
+
+{
+    "appCode": "b198c18f49354a51984581cc124d985b",
+    "param": {
+        "userCode": "",
+        "userName": ""
+    },
+    "pageFlag": false,
+    "pageNum": "1",
+    "pageSize": "10"
+}
+
+
+### 设置用户拓展
+POST {{host}}/api/user/v1/setUserExtInfo
+Content-Type: application/json;charset=UTF-8
+
+{
+    "appCode": "b198c18f49354a51984581cc124d985b",
+    "param": {
+        "userCode": "aa7b5ddb62a94d728382bdbe7e808875",
+        "userSet": "{\"test\": \"123\"}",
+        "userSet1": "{\"test\": \"123\"}",
+        "userSet2": "{\"test\": \"123\"}"
+    }
+}
+
+### 获取用户拓展
+POST {{host}}/api/user/v1/getUserExtInfo
+Content-Type: application/json;charset=UTF-8
+
+{
+    "appCode": "b198c18f49354a51984581cc124d985b",
+    "param": {
+        "userCode": "aa7b5ddb62a94d728382bdbe7e808875"
+    }
+}
+
+### 文件上传
+POST {{host}}/api/common/v1/upload
+Content-Type: multipart/form-data;charset=UTF-8
+
+?appCode=b198c18f49354a51984581cc124d985b&file=

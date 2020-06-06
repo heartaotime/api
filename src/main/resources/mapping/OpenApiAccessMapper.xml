@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.open.custom.api.app.mapper.OpenApiAccessMapper" >
+  <resultMap id="BaseResultMap" type="com.open.custom.api.app.model.OpenApiAccess" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="API_METHOD" property="apiMethod" jdbcType="VARCHAR" />
+    <result column="API_METHOD_CLASS" property="apiMethodClass" jdbcType="VARCHAR" />
+    <result column="ACCESS_DATE" property="accessDate" jdbcType="TIMESTAMP" />
+    <result column="CLIENT_IP" property="clientIp" jdbcType="VARCHAR" />
+    <result column="HTTP_METHOD" property="httpMethod" jdbcType="VARCHAR" />
+    <result column="APP_CODE" property="appCode" jdbcType="VARCHAR" />
+    <result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.open.custom.api.app.model.OpenApiAccessWithBLOBs" extends="BaseResultMap" >
+    <result column="API_REQUEST" property="apiRequest" jdbcType="LONGVARCHAR" />
+    <result column="API_RESPONSE" property="apiResponse" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, API_METHOD, API_METHOD_CLASS, ACCESS_DATE, CLIENT_IP, HTTP_METHOD, APP_CODE, 
+    USER_CODE, REMARK
+  </sql>
+  <sql id="Blob_Column_List" >
+    API_REQUEST, API_RESPONSE
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.open.custom.api.app.model.OpenApiAccessExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from OPEN_API_ACCESS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.open.custom.api.app.model.OpenApiAccessExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from OPEN_API_ACCESS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from OPEN_API_ACCESS
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from OPEN_API_ACCESS
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.open.custom.api.app.model.OpenApiAccessExample" >
+    delete from OPEN_API_ACCESS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.open.custom.api.app.model.OpenApiAccessWithBLOBs" >
+    insert into OPEN_API_ACCESS (ID, API_METHOD, API_METHOD_CLASS, 
+      ACCESS_DATE, CLIENT_IP, HTTP_METHOD, 
+      APP_CODE, USER_CODE, REMARK, 
+      API_REQUEST, API_RESPONSE)
+    values (#{id,jdbcType=INTEGER}, #{apiMethod,jdbcType=VARCHAR}, #{apiMethodClass,jdbcType=VARCHAR}, 
+      #{accessDate,jdbcType=TIMESTAMP}, #{clientIp,jdbcType=VARCHAR}, #{httpMethod,jdbcType=VARCHAR}, 
+      #{appCode,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{apiRequest,jdbcType=LONGVARCHAR}, #{apiResponse,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.open.custom.api.app.model.OpenApiAccessWithBLOBs" >
+    insert into OPEN_API_ACCESS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="apiMethod != null" >
+        API_METHOD,
+      </if>
+      <if test="apiMethodClass != null" >
+        API_METHOD_CLASS,
+      </if>
+      <if test="accessDate != null" >
+        ACCESS_DATE,
+      </if>
+      <if test="clientIp != null" >
+        CLIENT_IP,
+      </if>
+      <if test="httpMethod != null" >
+        HTTP_METHOD,
+      </if>
+      <if test="appCode != null" >
+        APP_CODE,
+      </if>
+      <if test="userCode != null" >
+        USER_CODE,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="apiRequest != null" >
+        API_REQUEST,
+      </if>
+      <if test="apiResponse != null" >
+        API_RESPONSE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="apiMethod != null" >
+        #{apiMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="apiMethodClass != null" >
+        #{apiMethodClass,jdbcType=VARCHAR},
+      </if>
+      <if test="accessDate != null" >
+        #{accessDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clientIp != null" >
+        #{clientIp,jdbcType=VARCHAR},
+      </if>
+      <if test="httpMethod != null" >
+        #{httpMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="appCode != null" >
+        #{appCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="apiRequest != null" >
+        #{apiRequest,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="apiResponse != null" >
+        #{apiResponse,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.open.custom.api.app.model.OpenApiAccessExample" resultType="java.lang.Integer" >
+    select count(*) from OPEN_API_ACCESS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update OPEN_API_ACCESS
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.apiMethod != null" >
+        API_METHOD = #{record.apiMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apiMethodClass != null" >
+        API_METHOD_CLASS = #{record.apiMethodClass,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accessDate != null" >
+        ACCESS_DATE = #{record.accessDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.clientIp != null" >
+        CLIENT_IP = #{record.clientIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.httpMethod != null" >
+        HTTP_METHOD = #{record.httpMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appCode != null" >
+        APP_CODE = #{record.appCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userCode != null" >
+        USER_CODE = #{record.userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apiRequest != null" >
+        API_REQUEST = #{record.apiRequest,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.apiResponse != null" >
+        API_RESPONSE = #{record.apiResponse,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update OPEN_API_ACCESS
+    set ID = #{record.id,jdbcType=INTEGER},
+      API_METHOD = #{record.apiMethod,jdbcType=VARCHAR},
+      API_METHOD_CLASS = #{record.apiMethodClass,jdbcType=VARCHAR},
+      ACCESS_DATE = #{record.accessDate,jdbcType=TIMESTAMP},
+      CLIENT_IP = #{record.clientIp,jdbcType=VARCHAR},
+      HTTP_METHOD = #{record.httpMethod,jdbcType=VARCHAR},
+      APP_CODE = #{record.appCode,jdbcType=VARCHAR},
+      USER_CODE = #{record.userCode,jdbcType=VARCHAR},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      API_REQUEST = #{record.apiRequest,jdbcType=LONGVARCHAR},
+      API_RESPONSE = #{record.apiResponse,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update OPEN_API_ACCESS
+    set ID = #{record.id,jdbcType=INTEGER},
+      API_METHOD = #{record.apiMethod,jdbcType=VARCHAR},
+      API_METHOD_CLASS = #{record.apiMethodClass,jdbcType=VARCHAR},
+      ACCESS_DATE = #{record.accessDate,jdbcType=TIMESTAMP},
+      CLIENT_IP = #{record.clientIp,jdbcType=VARCHAR},
+      HTTP_METHOD = #{record.httpMethod,jdbcType=VARCHAR},
+      APP_CODE = #{record.appCode,jdbcType=VARCHAR},
+      USER_CODE = #{record.userCode,jdbcType=VARCHAR},
+      REMARK = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.open.custom.api.app.model.OpenApiAccessWithBLOBs" >
+    update OPEN_API_ACCESS
+    <set >
+      <if test="apiMethod != null" >
+        API_METHOD = #{apiMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="apiMethodClass != null" >
+        API_METHOD_CLASS = #{apiMethodClass,jdbcType=VARCHAR},
+      </if>
+      <if test="accessDate != null" >
+        ACCESS_DATE = #{accessDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clientIp != null" >
+        CLIENT_IP = #{clientIp,jdbcType=VARCHAR},
+      </if>
+      <if test="httpMethod != null" >
+        HTTP_METHOD = #{httpMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="appCode != null" >
+        APP_CODE = #{appCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        USER_CODE = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="apiRequest != null" >
+        API_REQUEST = #{apiRequest,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="apiResponse != null" >
+        API_RESPONSE = #{apiResponse,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.open.custom.api.app.model.OpenApiAccessWithBLOBs" >
+    update OPEN_API_ACCESS
+    set API_METHOD = #{apiMethod,jdbcType=VARCHAR},
+      API_METHOD_CLASS = #{apiMethodClass,jdbcType=VARCHAR},
+      ACCESS_DATE = #{accessDate,jdbcType=TIMESTAMP},
+      CLIENT_IP = #{clientIp,jdbcType=VARCHAR},
+      HTTP_METHOD = #{httpMethod,jdbcType=VARCHAR},
+      APP_CODE = #{appCode,jdbcType=VARCHAR},
+      USER_CODE = #{userCode,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      API_REQUEST = #{apiRequest,jdbcType=LONGVARCHAR},
+      API_RESPONSE = #{apiResponse,jdbcType=LONGVARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.open.custom.api.app.model.OpenApiAccess" >
+    update OPEN_API_ACCESS
+    set API_METHOD = #{apiMethod,jdbcType=VARCHAR},
+      API_METHOD_CLASS = #{apiMethodClass,jdbcType=VARCHAR},
+      ACCESS_DATE = #{accessDate,jdbcType=TIMESTAMP},
+      CLIENT_IP = #{clientIp,jdbcType=VARCHAR},
+      HTTP_METHOD = #{httpMethod,jdbcType=VARCHAR},
+      APP_CODE = #{appCode,jdbcType=VARCHAR},
+      USER_CODE = #{userCode,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
