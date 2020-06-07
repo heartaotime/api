@@ -1,25 +1,20 @@
-package com.open.custom.api.app.control;
+package com.open.custom.api.control;
 
-import com.open.custom.api.app.model.OpenAppInfo;
-import com.open.custom.api.app.model.OpenAppInfoExample;
-import com.open.custom.api.app.sevice.IOpenAppInfoService;
+import com.open.custom.api.model.OpenAppInfo;
+import com.open.custom.api.model.OpenAppInfoExample;
+import com.open.custom.api.service.IOpenAppInfoService;
 import com.open.custom.api.bean.CommonRequest;
 import com.open.custom.api.bean.CommonResponse;
 import com.open.custom.api.exception.BusiException;
 import com.open.custom.api.service.RedisService;
-import com.open.custom.api.user.model.OpenUserInfo;
-import com.open.custom.api.user.model.extend.OpenUserInfoExtend;
-import com.open.custom.api.user.sevice.IOpenUserInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
