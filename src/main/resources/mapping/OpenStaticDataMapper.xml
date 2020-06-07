@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.open.custom.api.mapper.OpenStaticDataMapper" >
+  <resultMap id="BaseResultMap" type="com.open.custom.api.model.OpenStaticData" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="CODE_TYPE" property="codeType" jdbcType="VARCHAR" />
+    <result column="CODE_NAME" property="codeName" jdbcType="VARCHAR" />
+    <result column="CODE_VALUE" property="codeValue" jdbcType="VARCHAR" />
+    <result column="CODE_DESC" property="codeDesc" jdbcType="VARCHAR" />
+    <result column="SORT" property="sort" jdbcType="INTEGER" />
+    <result column="CODE_PAR_TYPE" property="codeParType" jdbcType="VARCHAR" />
+    <result column="STATE" property="state" jdbcType="INTEGER" />
+    <result column="EXT1" property="ext1" jdbcType="VARCHAR" />
+    <result column="EXT2" property="ext2" jdbcType="VARCHAR" />
+    <result column="EXT3" property="ext3" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.open.custom.api.model.OpenStaticData" extends="BaseResultMap" >
+    <result column="BIG_DATA" property="bigData" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, CODE_TYPE, CODE_NAME, CODE_VALUE, CODE_DESC, SORT, CODE_PAR_TYPE, STATE, EXT1, 
+    EXT2, EXT3
+  </sql>
+  <sql id="Blob_Column_List" >
+    BIG_DATA
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.open.custom.api.model.OpenStaticDataExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from OPEN_STATIC_DATA
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.open.custom.api.model.OpenStaticDataExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from OPEN_STATIC_DATA
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from OPEN_STATIC_DATA
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from OPEN_STATIC_DATA
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.open.custom.api.model.OpenStaticDataExample" >
+    delete from OPEN_STATIC_DATA
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.open.custom.api.model.OpenStaticData" >
+    insert into OPEN_STATIC_DATA (ID, CODE_TYPE, CODE_NAME, 
+      CODE_VALUE, CODE_DESC, SORT, 
+      CODE_PAR_TYPE, STATE, EXT1, 
+      EXT2, EXT3, BIG_DATA
+      )
+    values (#{id,jdbcType=INTEGER}, #{codeType,jdbcType=VARCHAR}, #{codeName,jdbcType=VARCHAR}, 
+      #{codeValue,jdbcType=VARCHAR}, #{codeDesc,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, 
+      #{codeParType,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{ext1,jdbcType=VARCHAR}, 
+      #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR}, #{bigData,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.open.custom.api.model.OpenStaticData" >
+    insert into OPEN_STATIC_DATA
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="codeType != null" >
+        CODE_TYPE,
+      </if>
+      <if test="codeName != null" >
+        CODE_NAME,
+      </if>
+      <if test="codeValue != null" >
+        CODE_VALUE,
+      </if>
+      <if test="codeDesc != null" >
+        CODE_DESC,
+      </if>
+      <if test="sort != null" >
+        SORT,
+      </if>
+      <if test="codeParType != null" >
+        CODE_PAR_TYPE,
+      </if>
+      <if test="state != null" >
+        STATE,
+      </if>
+      <if test="ext1 != null" >
+        EXT1,
+      </if>
+      <if test="ext2 != null" >
+        EXT2,
+      </if>
+      <if test="ext3 != null" >
+        EXT3,
+      </if>
+      <if test="bigData != null" >
+        BIG_DATA,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="codeType != null" >
+        #{codeType,jdbcType=VARCHAR},
+      </if>
+      <if test="codeName != null" >
+        #{codeName,jdbcType=VARCHAR},
+      </if>
+      <if test="codeValue != null" >
+        #{codeValue,jdbcType=VARCHAR},
+      </if>
+      <if test="codeDesc != null" >
+        #{codeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="codeParType != null" >
+        #{codeParType,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="bigData != null" >
+        #{bigData,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.open.custom.api.model.OpenStaticDataExample" resultType="java.lang.Integer" >
+    select count(*) from OPEN_STATIC_DATA
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update OPEN_STATIC_DATA
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.codeType != null" >
+        CODE_TYPE = #{record.codeType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.codeName != null" >
+        CODE_NAME = #{record.codeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.codeValue != null" >
+        CODE_VALUE = #{record.codeValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.codeDesc != null" >
+        CODE_DESC = #{record.codeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sort != null" >
+        SORT = #{record.sort,jdbcType=INTEGER},
+      </if>
+      <if test="record.codeParType != null" >
+        CODE_PAR_TYPE = #{record.codeParType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.state != null" >
+        STATE = #{record.state,jdbcType=INTEGER},
+      </if>
+      <if test="record.ext1 != null" >
+        EXT1 = #{record.ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext2 != null" >
+        EXT2 = #{record.ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext3 != null" >
+        EXT3 = #{record.ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bigData != null" >
+        BIG_DATA = #{record.bigData,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update OPEN_STATIC_DATA
+    set ID = #{record.id,jdbcType=INTEGER},
+      CODE_TYPE = #{record.codeType,jdbcType=VARCHAR},
+      CODE_NAME = #{record.codeName,jdbcType=VARCHAR},
+      CODE_VALUE = #{record.codeValue,jdbcType=VARCHAR},
+      CODE_DESC = #{record.codeDesc,jdbcType=VARCHAR},
+      SORT = #{record.sort,jdbcType=INTEGER},
+      CODE_PAR_TYPE = #{record.codeParType,jdbcType=VARCHAR},
+      STATE = #{record.state,jdbcType=INTEGER},
+      EXT1 = #{record.ext1,jdbcType=VARCHAR},
+      EXT2 = #{record.ext2,jdbcType=VARCHAR},
+      EXT3 = #{record.ext3,jdbcType=VARCHAR},
+      BIG_DATA = #{record.bigData,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update OPEN_STATIC_DATA
+    set ID = #{record.id,jdbcType=INTEGER},
+      CODE_TYPE = #{record.codeType,jdbcType=VARCHAR},
+      CODE_NAME = #{record.codeName,jdbcType=VARCHAR},
+      CODE_VALUE = #{record.codeValue,jdbcType=VARCHAR},
+      CODE_DESC = #{record.codeDesc,jdbcType=VARCHAR},
+      SORT = #{record.sort,jdbcType=INTEGER},
+      CODE_PAR_TYPE = #{record.codeParType,jdbcType=VARCHAR},
+      STATE = #{record.state,jdbcType=INTEGER},
+      EXT1 = #{record.ext1,jdbcType=VARCHAR},
+      EXT2 = #{record.ext2,jdbcType=VARCHAR},
+      EXT3 = #{record.ext3,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.open.custom.api.model.OpenStaticData" >
+    update OPEN_STATIC_DATA
+    <set >
+      <if test="codeType != null" >
+        CODE_TYPE = #{codeType,jdbcType=VARCHAR},
+      </if>
+      <if test="codeName != null" >
+        CODE_NAME = #{codeName,jdbcType=VARCHAR},
+      </if>
+      <if test="codeValue != null" >
+        CODE_VALUE = #{codeValue,jdbcType=VARCHAR},
+      </if>
+      <if test="codeDesc != null" >
+        CODE_DESC = #{codeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        SORT = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="codeParType != null" >
+        CODE_PAR_TYPE = #{codeParType,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        STATE = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="ext1 != null" >
+        EXT1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        EXT2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        EXT3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="bigData != null" >
+        BIG_DATA = #{bigData,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.open.custom.api.model.OpenStaticData" >
+    update OPEN_STATIC_DATA
+    set CODE_TYPE = #{codeType,jdbcType=VARCHAR},
+      CODE_NAME = #{codeName,jdbcType=VARCHAR},
+      CODE_VALUE = #{codeValue,jdbcType=VARCHAR},
+      CODE_DESC = #{codeDesc,jdbcType=VARCHAR},
+      SORT = #{sort,jdbcType=INTEGER},
+      CODE_PAR_TYPE = #{codeParType,jdbcType=VARCHAR},
+      STATE = #{state,jdbcType=INTEGER},
+      EXT1 = #{ext1,jdbcType=VARCHAR},
+      EXT2 = #{ext2,jdbcType=VARCHAR},
+      EXT3 = #{ext3,jdbcType=VARCHAR},
+      BIG_DATA = #{bigData,jdbcType=LONGVARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.open.custom.api.model.OpenStaticData" >
+    update OPEN_STATIC_DATA
+    set CODE_TYPE = #{codeType,jdbcType=VARCHAR},
+      CODE_NAME = #{codeName,jdbcType=VARCHAR},
+      CODE_VALUE = #{codeValue,jdbcType=VARCHAR},
+      CODE_DESC = #{codeDesc,jdbcType=VARCHAR},
+      SORT = #{sort,jdbcType=INTEGER},
+      CODE_PAR_TYPE = #{codeParType,jdbcType=VARCHAR},
+      STATE = #{state,jdbcType=INTEGER},
+      EXT1 = #{ext1,jdbcType=VARCHAR},
+      EXT2 = #{ext2,jdbcType=VARCHAR},
+      EXT3 = #{ext3,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

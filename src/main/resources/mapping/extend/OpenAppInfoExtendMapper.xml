@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.open.custom.api.app.mapper.extend.OpenAppInfoExtendMapper">
-    <resultMap id="BaseResultMap" type="com.open.custom.api.app.model.OpenAppInfo" >
+<mapper namespace="com.open.custom.api.mapper.extend.OpenAppInfoExtendMapper">
+    <resultMap id="BaseResultMap" type="com.open.custom.api.model.OpenAppInfo" >
         <id column="ID" property="id" jdbcType="INTEGER" />
         <result column="APP_CODE" property="appCode" jdbcType="VARCHAR" />
         <result column="APP_SECRET" property="appSecret" jdbcType="VARCHAR" />

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.open.custom.api.app.mapper.OpenAppInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.open.custom.api.app.model.OpenAppInfo" >
+<mapper namespace="com.open.custom.api.mapper.OpenAppInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.open.custom.api.model.OpenAppInfo" >
     <id column="ID" property="id" jdbcType="INTEGER" />
     <result column="APP_CODE" property="appCode" jdbcType="VARCHAR" />
     <result column="APP_SECRET" property="appSecret" jdbcType="VARCHAR" />
@@ -76,7 +76,7 @@
     ID, APP_CODE, APP_SECRET, APP_NAME, APP_DESC, APP_URL, EMAIL, STATE, CREATE_DATE, 
     UPDATE_DATE, REMARK
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.open.custom.api.app.model.OpenAppInfoExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.open.custom.api.model.OpenAppInfoExample" >
     select
     <if test="distinct" >
       distinct
@@ -101,13 +101,13 @@
     delete from OPEN_APP_INFO
     where ID = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.open.custom.api.app.model.OpenAppInfoExample" >
+  <delete id="deleteByExample" parameterType="com.open.custom.api.model.OpenAppInfoExample" >
     delete from OPEN_APP_INFO
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.open.custom.api.app.model.OpenAppInfo" >
+  <insert id="insert" parameterType="com.open.custom.api.model.OpenAppInfo" >
     insert into OPEN_APP_INFO (ID, APP_CODE, APP_SECRET, 
       APP_NAME, APP_DESC, APP_URL, 
       EMAIL, STATE, CREATE_DATE, 
@@ -117,7 +117,7 @@
       #{email,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, 
       #{updateDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.open.custom.api.app.model.OpenAppInfo" >
+  <insert id="insertSelective" parameterType="com.open.custom.api.model.OpenAppInfo" >
     insert into OPEN_APP_INFO
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -190,7 +190,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.open.custom.api.app.model.OpenAppInfoExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.open.custom.api.model.OpenAppInfoExample" resultType="java.lang.Integer" >
     select count(*) from OPEN_APP_INFO
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -254,7 +254,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.open.custom.api.app.model.OpenAppInfo" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.open.custom.api.model.OpenAppInfo" >
     update OPEN_APP_INFO
     <set >
       <if test="appCode != null" >
@@ -290,7 +290,7 @@
     </set>
     where ID = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.open.custom.api.app.model.OpenAppInfo" >
+  <update id="updateByPrimaryKey" parameterType="com.open.custom.api.model.OpenAppInfo" >
     update OPEN_APP_INFO
     set APP_CODE = #{appCode,jdbcType=VARCHAR},
       APP_SECRET = #{appSecret,jdbcType=VARCHAR},

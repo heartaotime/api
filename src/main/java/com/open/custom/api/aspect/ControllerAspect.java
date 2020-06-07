@@ -2,10 +2,10 @@ package com.open.custom.api.aspect;
 
 
 import com.google.gson.Gson;
-import com.open.custom.api.app.model.OpenApiAccessWithBLOBs;
-import com.open.custom.api.app.model.OpenAppInfo;
-import com.open.custom.api.app.sevice.IOpenApiAccessService;
-import com.open.custom.api.app.sevice.IOpenAppInfoService;
+import com.open.custom.api.model.OpenApiAccessWithBLOBs;
+import com.open.custom.api.model.OpenAppInfo;
+import com.open.custom.api.service.IOpenApiAccessService;
+import com.open.custom.api.service.IOpenAppInfoService;
 import com.open.custom.api.bean.CommonRequest;
 import com.open.custom.api.bean.CommonResponse;
 import com.open.custom.api.exception.BusiException;
@@ -45,7 +45,7 @@ public class ControllerAspect {
     private static final Set<String> nConvert2Json = new HashSet<>();
 
     {
-        nConvert2Json.add("com.open.custom.api.common.control.CommonRestController.upload");
+        nConvert2Json.add("com.open.custom.api.control.CommonRestController.upload");
     }
 
     @Autowired
@@ -59,11 +59,11 @@ public class ControllerAspect {
     /**
      * Controller aspect.
      */
-    @Pointcut("execution(public * com.open.custom.api.*.control.*Controller.*(..))")
+    @Pointcut("execution(public * com.open.custom.api.control.*Controller.*(..))")
     public void controllerAspect() {
     }
 
-    @Pointcut("execution(public * com.open.custom.api.user.control.*Controller.*(..))")
+    @Pointcut("execution(public * com.open.custom.api.control.UserRestController.*(..))")
     public void userControllerAspect() {
     }
 

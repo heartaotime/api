@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.open.custom.api.user.mapper.OpenUserInfoExtMapper" >
-  <resultMap id="BaseResultMap" type="com.open.custom.api.user.model.OpenUserInfoExt" >
+<mapper namespace="com.open.custom.api.mapper.OpenUserInfoExtMapper" >
+  <resultMap id="BaseResultMap" type="com.open.custom.api.model.OpenUserInfoExt" >
     <id column="ID" property="id" jdbcType="INTEGER" />
     <result column="USER_ID" property="userId" jdbcType="INTEGER" />
     <result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
@@ -10,7 +10,7 @@
     <result column="STATE" property="state" jdbcType="INTEGER" />
     <result column="REMARK" property="remark" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.open.custom.api.user.model.OpenUserInfoExtWithBLOBs" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="com.open.custom.api.model.OpenUserInfoExtWithBLOBs" extends="BaseResultMap" >
     <result column="USER_SET" property="userSet" jdbcType="LONGVARCHAR" />
     <result column="USER_SET_1" property="userSet1" jdbcType="LONGVARCHAR" />
     <result column="USER_SET_2" property="userSet2" jdbcType="LONGVARCHAR" />
@@ -79,7 +79,7 @@
   <sql id="Blob_Column_List" >
     USER_SET, USER_SET_1, USER_SET_2
   </sql>
-  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.open.custom.api.user.model.OpenUserInfoExtExample" >
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.open.custom.api.model.OpenUserInfoExtExample" >
     select
     <if test="distinct" >
       distinct
@@ -96,7 +96,7 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.open.custom.api.user.model.OpenUserInfoExtExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.open.custom.api.model.OpenUserInfoExtExample" >
     select
     <if test="distinct" >
       distinct
@@ -123,13 +123,13 @@
     delete from OPEN_USER_INFO_EXT
     where ID = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.open.custom.api.user.model.OpenUserInfoExtExample" >
+  <delete id="deleteByExample" parameterType="com.open.custom.api.model.OpenUserInfoExtExample" >
     delete from OPEN_USER_INFO_EXT
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.open.custom.api.user.model.OpenUserInfoExtWithBLOBs" >
+  <insert id="insert" parameterType="com.open.custom.api.model.OpenUserInfoExtWithBLOBs" >
     insert into OPEN_USER_INFO_EXT (ID, USER_ID, USER_CODE, 
       CREATE_DATE, UPDATE_DATE, STATE, 
       REMARK, USER_SET, USER_SET_1, 
@@ -139,7 +139,7 @@
       #{remark,jdbcType=VARCHAR}, #{userSet,jdbcType=LONGVARCHAR}, #{userSet1,jdbcType=LONGVARCHAR}, 
       #{userSet2,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.open.custom.api.user.model.OpenUserInfoExtWithBLOBs" >
+  <insert id="insertSelective" parameterType="com.open.custom.api.model.OpenUserInfoExtWithBLOBs" >
     insert into OPEN_USER_INFO_EXT
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -206,7 +206,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.open.custom.api.user.model.OpenUserInfoExtExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.open.custom.api.model.OpenUserInfoExtExample" resultType="java.lang.Integer" >
     select count(*) from OPEN_USER_INFO_EXT
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -279,7 +279,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.open.custom.api.user.model.OpenUserInfoExtWithBLOBs" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.open.custom.api.model.OpenUserInfoExtWithBLOBs" >
     update OPEN_USER_INFO_EXT
     <set >
       <if test="userId != null" >
@@ -312,7 +312,7 @@
     </set>
     where ID = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.open.custom.api.user.model.OpenUserInfoExtWithBLOBs" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.open.custom.api.model.OpenUserInfoExtWithBLOBs" >
     update OPEN_USER_INFO_EXT
     set USER_ID = #{userId,jdbcType=INTEGER},
       USER_CODE = #{userCode,jdbcType=VARCHAR},
@@ -325,7 +325,7 @@
       USER_SET_2 = #{userSet2,jdbcType=LONGVARCHAR}
     where ID = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.open.custom.api.user.model.OpenUserInfoExt" >
+  <update id="updateByPrimaryKey" parameterType="com.open.custom.api.model.OpenUserInfoExt" >
     update OPEN_USER_INFO_EXT
     set USER_ID = #{userId,jdbcType=INTEGER},
       USER_CODE = #{userCode,jdbcType=VARCHAR},
