@@ -6,6 +6,7 @@
     <result column="API_METHOD" property="apiMethod" jdbcType="VARCHAR" />
     <result column="API_METHOD_CLASS" property="apiMethodClass" jdbcType="VARCHAR" />
     <result column="ACCESS_DATE" property="accessDate" jdbcType="TIMESTAMP" />
+    <result column="DURA_TIME" property="duraTime" jdbcType="INTEGER" />
     <result column="CLIENT_IP" property="clientIp" jdbcType="VARCHAR" />
     <result column="HTTP_METHOD" property="httpMethod" jdbcType="VARCHAR" />
     <result column="APP_CODE" property="appCode" jdbcType="VARCHAR" />
@@ -75,8 +76,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    ID, API_METHOD, API_METHOD_CLASS, ACCESS_DATE, CLIENT_IP, HTTP_METHOD, APP_CODE, 
-    USER_CODE, REMARK
+    ID, API_METHOD, API_METHOD_CLASS, ACCESS_DATE, DURA_TIME, CLIENT_IP, HTTP_METHOD, 
+    APP_CODE, USER_CODE, REMARK
   </sql>
   <sql id="Blob_Column_List" >
     API_REQUEST, API_RESPONSE
@@ -133,13 +134,15 @@
   </delete>
   <insert id="insert" parameterType="com.open.custom.api.app.model.OpenApiAccessWithBLOBs" >
     insert into OPEN_API_ACCESS (ID, API_METHOD, API_METHOD_CLASS, 
-      ACCESS_DATE, CLIENT_IP, HTTP_METHOD, 
-      APP_CODE, USER_CODE, REMARK, 
-      API_REQUEST, API_RESPONSE)
+      ACCESS_DATE, DURA_TIME, CLIENT_IP, 
+      HTTP_METHOD, APP_CODE, USER_CODE, 
+      REMARK, API_REQUEST, API_RESPONSE
+      )
     values (#{id,jdbcType=INTEGER}, #{apiMethod,jdbcType=VARCHAR}, #{apiMethodClass,jdbcType=VARCHAR}, 
-      #{accessDate,jdbcType=TIMESTAMP}, #{clientIp,jdbcType=VARCHAR}, #{httpMethod,jdbcType=VARCHAR}, 
-      #{appCode,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-      #{apiRequest,jdbcType=LONGVARCHAR}, #{apiResponse,jdbcType=LONGVARCHAR})
+      #{accessDate,jdbcType=TIMESTAMP}, #{duraTime,jdbcType=INTEGER}, #{clientIp,jdbcType=VARCHAR}, 
+      #{httpMethod,jdbcType=VARCHAR}, #{appCode,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{apiRequest,jdbcType=LONGVARCHAR}, #{apiResponse,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.open.custom.api.app.model.OpenApiAccessWithBLOBs" >
     insert into OPEN_API_ACCESS
@@ -155,6 +158,9 @@
       </if>
       <if test="accessDate != null" >
         ACCESS_DATE,
+      </if>
+      <if test="duraTime != null" >
+        DURA_TIME,
       </if>
       <if test="clientIp != null" >
         CLIENT_IP,
@@ -190,6 +196,9 @@
       </if>
       <if test="accessDate != null" >
         #{accessDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="duraTime != null" >
+        #{duraTime,jdbcType=INTEGER},
       </if>
       <if test="clientIp != null" >
         #{clientIp,jdbcType=VARCHAR},
@@ -235,6 +244,9 @@
       <if test="record.accessDate != null" >
         ACCESS_DATE = #{record.accessDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.duraTime != null" >
+        DURA_TIME = #{record.duraTime,jdbcType=INTEGER},
+      </if>
       <if test="record.clientIp != null" >
         CLIENT_IP = #{record.clientIp,jdbcType=VARCHAR},
       </if>
@@ -267,6 +279,7 @@
       API_METHOD = #{record.apiMethod,jdbcType=VARCHAR},
       API_METHOD_CLASS = #{record.apiMethodClass,jdbcType=VARCHAR},
       ACCESS_DATE = #{record.accessDate,jdbcType=TIMESTAMP},
+      DURA_TIME = #{record.duraTime,jdbcType=INTEGER},
       CLIENT_IP = #{record.clientIp,jdbcType=VARCHAR},
       HTTP_METHOD = #{record.httpMethod,jdbcType=VARCHAR},
       APP_CODE = #{record.appCode,jdbcType=VARCHAR},
@@ -284,6 +297,7 @@
       API_METHOD = #{record.apiMethod,jdbcType=VARCHAR},
       API_METHOD_CLASS = #{record.apiMethodClass,jdbcType=VARCHAR},
       ACCESS_DATE = #{record.accessDate,jdbcType=TIMESTAMP},
+      DURA_TIME = #{record.duraTime,jdbcType=INTEGER},
       CLIENT_IP = #{record.clientIp,jdbcType=VARCHAR},
       HTTP_METHOD = #{record.httpMethod,jdbcType=VARCHAR},
       APP_CODE = #{record.appCode,jdbcType=VARCHAR},
@@ -304,6 +318,9 @@
       </if>
       <if test="accessDate != null" >
         ACCESS_DATE = #{accessDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="duraTime != null" >
+        DURA_TIME = #{duraTime,jdbcType=INTEGER},
       </if>
       <if test="clientIp != null" >
         CLIENT_IP = #{clientIp,jdbcType=VARCHAR},
@@ -334,6 +351,7 @@
     set API_METHOD = #{apiMethod,jdbcType=VARCHAR},
       API_METHOD_CLASS = #{apiMethodClass,jdbcType=VARCHAR},
       ACCESS_DATE = #{accessDate,jdbcType=TIMESTAMP},
+      DURA_TIME = #{duraTime,jdbcType=INTEGER},
       CLIENT_IP = #{clientIp,jdbcType=VARCHAR},
       HTTP_METHOD = #{httpMethod,jdbcType=VARCHAR},
       APP_CODE = #{appCode,jdbcType=VARCHAR},
@@ -348,6 +366,7 @@
     set API_METHOD = #{apiMethod,jdbcType=VARCHAR},
       API_METHOD_CLASS = #{apiMethodClass,jdbcType=VARCHAR},
       ACCESS_DATE = #{accessDate,jdbcType=TIMESTAMP},
+      DURA_TIME = #{duraTime,jdbcType=INTEGER},
       CLIENT_IP = #{clientIp,jdbcType=VARCHAR},
       HTTP_METHOD = #{httpMethod,jdbcType=VARCHAR},
       APP_CODE = #{appCode,jdbcType=VARCHAR},
