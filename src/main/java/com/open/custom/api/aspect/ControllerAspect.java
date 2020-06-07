@@ -84,43 +84,76 @@ public class ControllerAspect {
         if (ra == null || sra == null) {
             return pjp.proceed();
         }
-        HttpServletRequest request = sra.getRequest();
-
-        String requestURL = request.getRequestURL().toString();
-        String method = request.getMethod();
-        String remoteAddr = request.getRemoteAddr();
-        String classMethod = pjp.getSignature().getDeclaringTypeName() + "." + pjp.getSignature().getName();
-
-        // String appCode = request.getHeader("Authorization");
-
-        logger.info("URL : " + requestURL);
-        logger.info("HTTP_METHOD : " + method);
-        logger.info("IP : " + remoteAddr);
-        logger.info("CLASS_METHOD : " + classMethod);
-
-        String requestParam = "";
-        String responseStr = "";
-
-        if (!nConvert2Json.contains(classMethod)) {
-            Object[] args = pjp.getArgs();
-            requestParam = gson.toJson(pjp.getArgs());
-            logger.info("REQUEST ARGS : " + requestParam);
-        } else {
-            requestParam = Arrays.toString(pjp.getArgs());
-            logger.info("REQUEST ARGS : " + requestParam);
-            Enumeration<String> enu = request.getParameterNames();
-            int i = 1;
-            while (enu.hasMoreElements()) {
-                String paraName = (String) enu.nextElement();
-                String parameter = request.getParameter(paraName);
-                logger.info("REQUEST ARGS " + i + " : " + paraName + "=" + request.getParameter(paraName));
-                i++;
-            }
-        }
 
         long startTime = System.currentTimeMillis();
         Object response = null;
+
+        String requestStr = "";
+        String responseStr = "";
+
+        String requestURL = null;
+        String httpMethod = null;
+        String remoteAddr = null;
+        String classMethod = null;
+        String appCode = null;
+        String userCode = null;
+
         try {
+
+            HttpServletRequest request = sra.getRequest();
+
+            requestURL = request.getRequestURL().toString();
+            httpMethod = request.getMethod();
+            remoteAddr = request.getRemoteAddr();
+            classMethod = pjp.getSignature().getDeclaringTypeName() + "." + pjp.getSignature().getName();
+
+            // String appCode = request.getHeader("Authorization");
+
+            logger.info("URL : " + requestURL);
+            logger.info("HTTP_METHOD : " + httpMethod);
+            logger.info("IP : " + remoteAddr);
+            logger.info("CLASS_METHOD : " + classMethod);
+
+            if (!nConvert2Json.contains(classMethod)) {
+                Object[] args = pjp.getArgs();
+                requestStr = gson.toJson(pjp.getArgs());
+                logger.info("REQUEST ARGS : " + requestStr);
+
+                Object arg = args[0];
+                if (arg instanceof CommonRequest) {
+                    // 获取 appCode userCode
+                    CommonRequest commonRequest = (CommonRequest) arg;
+                    appCode = commonRequest.getAppCode();
+                    Object param = commonRequest.getParam();
+                    if (param != null) {
+                        Map map = gson.fromJson(gson.toJson(param), Map.class);
+                        if (!CollectionUtils.isEmpty(map)) {
+                            Object userCodeObj = map.get("userCode");
+                            userCode = userCodeObj == null ? null : userCodeObj.toString();
+                        }
+                    }
+                }
+            } else {
+                requestStr = Arrays.toString(pjp.getArgs());
+                logger.info("REQUEST ARGS : " + requestStr);
+                Enumeration<String> enu = request.getParameterNames();
+                int i = 1;
+                while (enu.hasMoreElements()) {
+                    String paraName = (String) enu.nextElement();
+                    String paraValue = request.getParameter(paraName);
+                    logger.info("REQUEST ARGS " + i + " : " + paraName + "=" + paraValue);
+                    i++;
+
+                    // 获取 appCode userCode
+                    if ("appCode".equals(paraName)) {
+                        appCode = paraValue;
+                    }
+                    if ("userCode".equals("paraName")) {
+                        userCode = paraValue;
+                    }
+                }
+            }
+
             response = pjp.proceed();
         } catch (BusiException e) {
             response = new CommonResponse(e.getCode(), e.getMessage());
@@ -136,36 +169,23 @@ public class ControllerAspect {
             logger.info("SPEND TIME : {}ms\n", (endTime - startTime));
 
             // 记录接口日志
-            saveAccess(pjp, method, remoteAddr, classMethod, requestParam, responseStr);
+            saveAccess(httpMethod, remoteAddr, classMethod, requestStr, responseStr, appCode, userCode);
         }
         return response;
     }
 
-    private void saveAccess(ProceedingJoinPoint pjp, String method, String remoteAddr, String classMethod, String requestParam, String responseStr) {
+    private void saveAccess(String httpMethod, String remoteAddr, String classMethod, String requestStr, String responseStr, String appCode, String userCode) {
         try {
             OpenApiAccessWithBLOBs record = new OpenApiAccessWithBLOBs();
             record.setApiMethod(classMethod.substring(classMethod.lastIndexOf(".") + 1));
             record.setApiMethodClass(classMethod);
-            record.setApiRequest(requestParam);
+            record.setApiRequest(requestStr);
             record.setApiResponse(responseStr);
             record.setClientIp(remoteAddr);
-            record.setHttpMethod(method);
+            record.setHttpMethod(httpMethod);
             record.setAccessDate(new Date());
-            if (pjp.getArgs() != null && pjp.getArgs()[0] != null) {
-                Object arg = pjp.getArgs()[0];
-                if (arg instanceof CommonRequest) {
-                    CommonRequest commonRequest = (CommonRequest) arg;
-                    record.setAppCode(commonRequest.getAppCode());
-                    Object param = commonRequest.getParam();
-                    if (param != null) {
-                        Map map = gson.fromJson(gson.toJson(param), Map.class);
-                        if (!CollectionUtils.isEmpty(map)) {
-                            Object userCode = map.get("userCode");
-                            record.setUserCode(userCode == null ? null : userCode.toString());
-                        }
-                    }
-                }
-            }
+            record.setAppCode(appCode);
+            record.setUserCode(userCode);
             iOpenApiAccessService.insertSelective(record);
         } catch (Exception e) {
             logger.error("saveAccess catch Exception, {}", e);

@@ -12,7 +12,7 @@ Content-Type: application/json;charset=UTF-8
     }
 }
 
-###
+### 保存APP信息
 POST {{host}}/api/app/v1/saveApp
 Content-Type: application/json;charset=UTF-8
 
@@ -33,8 +33,7 @@ Authorization: b198c18f49354a51984581cc124d985b
 {
     "appCode": "b198c18f49354a51984581cc124d985b",
     "param": {
-        "userName": "heartaotime",
-        "userCode": "123"
+        "userName": "heartaotime"
     }
 }
 
