@@ -365,6 +365,66 @@ public class OpenApiAccessExample {
             return (Criteria) this;
         }
 
+        public Criteria andDuraTimeIsNull() {
+            addCriterion("DURA_TIME is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDuraTimeIsNotNull() {
+            addCriterion("DURA_TIME is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDuraTimeEqualTo(Integer value) {
+            addCriterion("DURA_TIME =", value, "duraTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDuraTimeNotEqualTo(Integer value) {
+            addCriterion("DURA_TIME <>", value, "duraTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDuraTimeGreaterThan(Integer value) {
+            addCriterion("DURA_TIME >", value, "duraTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDuraTimeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("DURA_TIME >=", value, "duraTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDuraTimeLessThan(Integer value) {
+            addCriterion("DURA_TIME <", value, "duraTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDuraTimeLessThanOrEqualTo(Integer value) {
+            addCriterion("DURA_TIME <=", value, "duraTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDuraTimeIn(List<Integer> values) {
+            addCriterion("DURA_TIME in", values, "duraTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDuraTimeNotIn(List<Integer> values) {
+            addCriterion("DURA_TIME not in", values, "duraTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDuraTimeBetween(Integer value1, Integer value2) {
+            addCriterion("DURA_TIME between", value1, value2, "duraTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDuraTimeNotBetween(Integer value1, Integer value2) {
+            addCriterion("DURA_TIME not between", value1, value2, "duraTime");
+            return (Criteria) this;
+        }
+
         public Criteria andClientIpIsNull() {
             addCriterion("CLIENT_IP is null");
             return (Criteria) this;

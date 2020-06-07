@@ -166,15 +166,16 @@ public class ControllerAspect {
             logger.info("RESPONSE : {}", responseStr);
 
             long endTime = System.currentTimeMillis();
-            logger.info("SPEND TIME : {}ms\n", (endTime - startTime));
+            long duraTime = endTime - startTime;
+            logger.info("SPEND TIME : {}ms\n", duraTime);
 
             // 记录接口日志
-            saveAccess(httpMethod, remoteAddr, classMethod, requestStr, responseStr, appCode, userCode);
+            saveAccess(httpMethod, remoteAddr, classMethod, requestStr, responseStr, appCode, userCode, duraTime);
         }
         return response;
     }
 
-    private void saveAccess(String httpMethod, String remoteAddr, String classMethod, String requestStr, String responseStr, String appCode, String userCode) {
+    private void saveAccess(String httpMethod, String remoteAddr, String classMethod, String requestStr, String responseStr, String appCode, String userCode, long duraTime) {
         try {
             OpenApiAccessWithBLOBs record = new OpenApiAccessWithBLOBs();
             record.setApiMethod(classMethod.substring(classMethod.lastIndexOf(".") + 1));
@@ -184,6 +185,7 @@ public class ControllerAspect {
             record.setClientIp(remoteAddr);
             record.setHttpMethod(httpMethod);
             record.setAccessDate(new Date());
+            record.setDuraTime(Integer.parseInt(String.valueOf(duraTime)));
             record.setAppCode(appCode);
             record.setUserCode(userCode);
             iOpenApiAccessService.insertSelective(record);

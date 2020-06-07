@@ -11,6 +11,8 @@ public class OpenApiAccess {
 
     private Date accessDate;
 
+    private Integer duraTime;
+
     private String clientIp;
 
     private String httpMethod;
@@ -51,6 +53,14 @@ public class OpenApiAccess {
 
     public void setAccessDate(Date accessDate) {
         this.accessDate = accessDate;
+    }
+
+    public Integer getDuraTime() {
+        return duraTime;
+    }
+
+    public void setDuraTime(Integer duraTime) {
+        this.duraTime = duraTime;
     }
 
     public String getClientIp() {
