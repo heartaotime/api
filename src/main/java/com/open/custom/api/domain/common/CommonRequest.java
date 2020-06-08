@@ -1,4 +1,4 @@
-package com.open.custom.api.bean;
+package com.open.custom.api.domain.common;
 
 
 import io.swagger.annotations.ApiModelProperty;

@@ -3,7 +3,7 @@
 ## 使用须知
 
 + 接口免费提供服务，并且支持跨域调用，请合理使用
-+ 为了防止接口滥用，调用接口需要提供 `appCode` ，所以正式使用接口前先邮件 `heartaotime@foxmail.com` ，注册一个应用
++ 为了防止接口滥用，调用大部分接口都需要提供 `appCode` ，所以正式使用接口前先邮件 `heartaotime@foxmail.com` ，注册一个应用
 + 邮件中主要需要说明的模板如下（没有的填写暂无）：
   + 1.应用名称：
   + 2.应用描述：
@@ -67,6 +67,7 @@ Content-Type: application/json;charset=UTF-8
 - 设置用户拓展信息
 - 获取用户拓展信息
 - 文件上传
+- 获取随机图片
 
 - 后续接口开发计划：天气接口，图片汇总接口，新闻接口，
 古诗词接口，每日一句接口，随机返回图片接口，基于appCode的全局静态配置接口，
@@ -290,3 +291,9 @@ Content-Type: multipart/form-data;charset=UTF-8
 * file:文件
 ```
 ![文件上传请求示例](https://www.myindex.top/file/myfile/uploadapi.png "文件上传请求示例")
+
++ 获取随机图片
+```
+### 获取随机图片
+GET https://www.myindex.top/api/common/v1/getPicture
+```

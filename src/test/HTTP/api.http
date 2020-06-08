@@ -168,3 +168,9 @@ POST {{host}}/api/common/v1/upload
 Content-Type: multipart/form-data;charset=UTF-8
 
 ?appCode=b198c18f49354a51984581cc124d985b&file=
+
+
+### 获取随机图片
+GET {{host}}/api/common/v1/getPicture?appCode=b198c18f49354a51984581cc124d985b&qryType=1
+
+

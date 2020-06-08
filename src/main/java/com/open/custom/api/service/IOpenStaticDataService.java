@@ -34,4 +34,6 @@ public interface IOpenStaticDataService {
     int updateByPrimaryKeyWithBLOBs(OpenStaticData record);
 
     int updateByPrimaryKey(OpenStaticData record);
+
+    List<OpenStaticData> getStaticDataByCodeType(String codeType);
 }

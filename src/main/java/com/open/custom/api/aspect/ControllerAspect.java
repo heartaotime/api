@@ -3,11 +3,10 @@ package com.open.custom.api.aspect;
 
 import com.google.gson.Gson;
 import com.open.custom.api.model.OpenApiAccessWithBLOBs;
-import com.open.custom.api.model.OpenAppInfo;
 import com.open.custom.api.service.IOpenApiAccessService;
 import com.open.custom.api.service.IOpenAppInfoService;
-import com.open.custom.api.bean.CommonRequest;
-import com.open.custom.api.bean.CommonResponse;
+import com.open.custom.api.domain.common.CommonRequest;
+import com.open.custom.api.domain.common.CommonResponse;
 import com.open.custom.api.exception.BusiException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -46,6 +45,7 @@ public class ControllerAspect {
 
     {
         nConvert2Json.add("com.open.custom.api.control.CommonRestController.upload");
+        nConvert2Json.add("com.open.custom.api.control.CommonRestController.getPicture");
     }
 
     @Autowired
@@ -116,7 +116,7 @@ public class ControllerAspect {
 
             if (!nConvert2Json.contains(classMethod)) {
                 Object[] args = pjp.getArgs();
-                requestStr = gson.toJson(pjp.getArgs());
+                requestStr = gson.toJson(args);
                 logger.info("REQUEST ARGS : " + requestStr);
 
                 Object arg = args[0];

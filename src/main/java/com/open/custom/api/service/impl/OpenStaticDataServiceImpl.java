@@ -4,9 +4,13 @@ import com.open.custom.api.mapper.OpenStaticDataMapper;
 import com.open.custom.api.model.OpenStaticData;
 import com.open.custom.api.model.OpenStaticDataExample;
 import com.open.custom.api.service.IOpenStaticDataService;
+import com.open.custom.api.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,6 +20,11 @@ public class OpenStaticDataServiceImpl implements IOpenStaticDataService {
     @Autowired
     private OpenStaticDataMapper openStaticDataMapper;
 
+    @Autowired
+    private RedisService redisService;
+
+    @Value("${custCacheKey.OPEN_STATIC_DATA}")
+    private String OPEN_STATIC_DATA;
 
     @Override
     public int countByExample(OpenStaticDataExample example) {
@@ -85,5 +94,25 @@ public class OpenStaticDataServiceImpl implements IOpenStaticDataService {
     @Override
     public int updateByPrimaryKey(OpenStaticData record) {
         return openStaticDataMapper.updateByPrimaryKey(record);
+    }
+
+    @Override
+    public List<OpenStaticData> getStaticDataByCodeType(String codeType) {
+        if (StringUtils.isEmpty(codeType)) {
+            return null;
+        }
+        Object cacheData = redisService.hget(OPEN_STATIC_DATA, codeType);
+        List<OpenStaticData> openStaticDatas = new ArrayList<>();
+        if (cacheData == null) {
+            OpenStaticDataExample example = new OpenStaticDataExample();
+            OpenStaticDataExample.Criteria criteria = example.createCriteria();
+            criteria.andCodeTypeEqualTo(codeType);
+            criteria.andStateEqualTo(1);
+            openStaticDatas = selectByExample(example);
+            redisService.set(OPEN_STATIC_DATA, codeType);
+        } else {
+            openStaticDatas = (List<OpenStaticData>) cacheData;
+        }
+        return openStaticDatas;
     }
 }
