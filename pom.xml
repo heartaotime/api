@@ -12,7 +12,7 @@
     <artifactId>api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>api</name>
-    <description>一个开发API接口服务</description>
+    <description>一个开放API接口服务</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

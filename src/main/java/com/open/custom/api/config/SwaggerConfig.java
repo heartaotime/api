@@ -1,5 +1,6 @@
 package com.open.custom.api.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,7 +12,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * Description: http://127.0.0.1:5000/api/swagger-ui.html
+ * Description: http://127.0.0.1:5555/api/swagger-ui.html
  * Author: huxintao
  * Date: 2020-05-14
  *
@@ -21,9 +22,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
+    @Value("${baseUrlSwigger}")
+    private String baseUrlSwigger;
+
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .host(baseUrlSwigger)
                 .apiInfo(apiInfo())
                 .useDefaultResponseMessages(false)
                 .select()

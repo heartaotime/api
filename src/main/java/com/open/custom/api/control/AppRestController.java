@@ -7,6 +7,8 @@ import com.open.custom.api.bean.CommonRequest;
 import com.open.custom.api.bean.CommonResponse;
 import com.open.custom.api.exception.BusiException;
 import com.open.custom.api.service.RedisService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.UUID;
 
+@Api(description = "APP应用服务")
 @RestController
 @CrossOrigin(value = "*")
 @RequestMapping(value = "/app/v1")
@@ -41,6 +44,7 @@ public class AppRestController {
     @Value("${custCacheKey.OPEN_APP_INFO}")
     private String OPEN_APP_INFO;
 
+    @ApiOperation(value = "保存APP")
     @PostMapping(value = "/saveApp")
     public CommonResponse<String> saveApp(@RequestBody CommonRequest<OpenAppInfo> commonRequest) {
         CommonResponse response = new CommonResponse();

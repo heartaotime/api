@@ -18,6 +18,8 @@ import com.open.custom.api.service.RedisService;
 import com.open.custom.api.service.IOpenUserInfoExtService;
 import com.open.custom.api.service.IOpenUserInfoService;
 import com.open.custom.api.utils.DateUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -34,6 +36,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Api(description = "用户服务")
 @RestController
 @CrossOrigin(value = "*")
 @RequestMapping(value = "/user/v1")
@@ -60,6 +63,7 @@ public class UserRestController {
     @Value("${spring.mail.username}")
     private String mailUserName;
 
+    @ApiOperation(value = "校验用户名或邮箱是否已注册")
     @PostMapping(value = "/checkUserExist")
     public CommonResponse<String> checkUserExist(@RequestBody CommonRequest<OpenUserInfo> commonRequest) {
         CommonResponse response = new CommonResponse();
@@ -89,6 +93,7 @@ public class UserRestController {
     }
 
 
+    @ApiOperation(value = "发送验证码邮件")
     @PostMapping(value = "/sendEMail")
     public CommonResponse sendEMail(@RequestBody CommonRequest<OpenUserInfo> commonRequest) {
         CommonResponse response = new CommonResponse();
@@ -131,6 +136,7 @@ public class UserRestController {
     }
 
 
+    @ApiOperation(value = "用户注册")
     @PostMapping(value = "/registUser")
     public CommonResponse registUser(@RequestBody CommonRequest<OpenUserInfoExtend> commonRequest) {
         CommonResponse response = new CommonResponse();
@@ -215,6 +221,7 @@ public class UserRestController {
     }
 
 
+    @ApiOperation(value = "更新用户信息")
     @PostMapping(value = "/updateUser")
     public CommonResponse<OpenUserInfoBean> updateUser(@RequestBody CommonRequest<OpenUserInfoBean> commonRequest) {
         CommonResponse<OpenUserInfoBean> response = new CommonResponse();
@@ -284,6 +291,7 @@ public class UserRestController {
     }
 
 
+    @ApiOperation(value = "修改登陆密码")
     @PostMapping(value = "/modifyUserPwd")
     public CommonResponse<String> modifyUserPwd(@RequestBody CommonRequest<OpenUserInfoExtend> commonRequest) {
         CommonResponse<String> response = new CommonResponse();
@@ -324,6 +332,8 @@ public class UserRestController {
         return response;
     }
 
+
+    @ApiOperation(value = "用户注销")
     @PostMapping(value = "/deleteUser")
     public CommonResponse<String> deleteUser(@RequestBody CommonRequest<OpenUserInfoBean> commonRequest) {
         CommonResponse<String> response = new CommonResponse();
@@ -364,6 +374,7 @@ public class UserRestController {
     }
 
 
+    @ApiOperation(value = "用户登陆")
     @PostMapping(value = "/loginUser")
     public CommonResponse<OpenUserInfoBean> loginUser(@RequestBody CommonRequest<OpenUserInfo> commonRequest) {
         CommonResponse<OpenUserInfoBean> response = new CommonResponse();
@@ -390,6 +401,8 @@ public class UserRestController {
         return response;
     }
 
+
+    @ApiOperation(value = "获取用户列表（分页）")
     @PostMapping(value = "/getUserList")
     public CommonResponse<PageInfo<OpenUserInfoBean>> getUserList(@RequestBody CommonRequest<OpenUserInfo> commonRequest) {
         CommonResponse<PageInfo<OpenUserInfoBean>> response = new CommonResponse();
@@ -452,6 +465,7 @@ public class UserRestController {
     }
 
 
+    @ApiOperation(value = "设置用户拓展信息")
     @PostMapping(value = "/setUserExtInfo")
     public CommonResponse<String> setUserExtInfo(@RequestBody CommonRequest<OpenUserInfoExtWithBLOBs> commonRequest) {
         CommonResponse<String> response = new CommonResponse();
@@ -500,6 +514,7 @@ public class UserRestController {
         return response;
     }
 
+    @ApiOperation(value = "获取用户拓展信息")
     @PostMapping(value = "/getUserExtInfo")
     public CommonResponse<OpenUserInfoExtBean> getUserExtInfo(@RequestBody CommonRequest<OpenUserInfoExt> commonRequest) {
         CommonResponse<OpenUserInfoExtBean> response = new CommonResponse();

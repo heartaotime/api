@@ -1,5 +1,7 @@
 package com.open.custom.api.bean;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Create with IntelliJ IDEA.
  * Description:
@@ -8,10 +10,13 @@ package com.open.custom.api.bean;
  */
 public class CommonResponse<T> {
 
+    @ApiModelProperty(value = "消息码")
     private String code;
 
+    @ApiModelProperty(value = "描述")
     private String message;
 
+    @ApiModelProperty(value = "数据")
     private T data;
 
     public CommonResponse() {

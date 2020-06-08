@@ -1,6 +1,8 @@
 package com.open.custom.api.bean;
 
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Create with IntelliJ IDEA.
  * Description:
@@ -9,17 +11,23 @@ package com.open.custom.api.bean;
  */
 public class CommonRequest<T> {
 
+    @ApiModelProperty(value = "应用编码")
     private String appCode;
 
+    @ApiModelProperty(value = "参数")
     private T param;
 
+    @ApiModelProperty(value = "是否分页")
     private Boolean pageFlag = true;
+
+    @ApiModelProperty(value = "当前页码")
     private Integer pageNum = 1;
+
+    @ApiModelProperty(value = "每页条数")
     private Integer pageSize = 10;
 
+    @ApiModelProperty(value = "是否读取redis")
     private Boolean readRedis = true;
-
-    private Boolean recursion = false; // 是否需要递归获取子类
 
 
     public String getAppCode() {
@@ -30,13 +38,6 @@ public class CommonRequest<T> {
         this.appCode = appCode;
     }
 
-    public Boolean getRecursion() {
-        return recursion;
-    }
-
-    public void setRecursion(Boolean recursion) {
-        this.recursion = recursion;
-    }
 
     public Boolean getReadRedis() {
         return readRedis;

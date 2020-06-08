@@ -9,6 +9,10 @@ import com.open.custom.api.model.OpenAppInfo;
 import com.open.custom.api.service.IOpenAppInfoService;
 import com.open.custom.api.service.RedisService;
 import com.open.custom.api.utils.DateUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
+@Api(description = "通用服务")
 @RestController
 @CrossOrigin(value = "*")
 @RequestMapping(value = "/common/v1")
@@ -59,6 +64,10 @@ public class CommonRestController {
     private SFtpConfig sFtpConfig;
 
 
+    @ApiOperation(value = "文件上传")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "appCode", value = "应用编码", required = true, dataType = "String")
+    })
     @PostMapping(value = "/upload")
     public CommonResponse<String> upload(@RequestParam("file") MultipartFile file, @RequestParam("appCode") String appCode) throws Exception {
         CommonResponse<String> response = new CommonResponse();
