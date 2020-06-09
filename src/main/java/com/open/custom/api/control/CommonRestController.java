@@ -133,19 +133,15 @@ public class CommonRestController {
 
     @ApiOperation(value = "获取随机图片")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "classify", value = "分类 1：随机（默认） 2：风景 3：动漫", required = false, dataType = "String")
+            @ApiImplicitParam(name = "picType", value = "图片类型 0:原图 1：PC 2：手机", required = false, dataType = "String")
     })
-    @GetMapping(value = "/getPicture")
+    @GetMapping(value = "/getPicture/{picType}")
     public CommonResponse<String> getPicture(
-            @RequestParam(value = "classify", required = false) String classify,
+            @PathVariable(value = "picType", required = false) String picType,
+//            @RequestParam(value = "picType", required = false) String picType,
             HttpServletResponse response) throws IOException {
         CommonResponse<String> commonResponse = new CommonResponse();
 
-//        if (qryPicRequest != null) {
-//            String picType = qryPicRequest.getPicType();
-//            String classify = qryPicRequest.getClassify();
-//            String picOrigin = qryPicRequest.getPicOrigin();
-//        }
 
         List<OpenStaticData> openStaticData = iOpenStaticDataService.getStaticDataByCodeType("BY_IMG");
         if (!CollectionUtils.isEmpty(openStaticData)) {
@@ -153,8 +149,35 @@ public class CommonRestController {
             // 获取 1 - size 的随机数
             int random = (int) (1 + Math.random() * size);
             String codeValue = openStaticData.get(random - 1).getCodeValue();
-            response.sendRedirect(codeValue);
+            if (!StringUtils.isEmpty(codeValue)) {
+                String img1920 = codeValue.substring(0, codeValue.indexOf("&"));
+
+                String img1366 = img1920.replaceAll("1920x1080", "1366x768");
+                String img1080 = img1920.replaceAll("1920x1080", "1080x1920");
+                String imgUHD = img1920.replaceAll("1920x1080", "UHD");
+
+                String returnUrl = img1920;
+                if ("0".equals(picType)) {
+                    returnUrl = imgUHD;
+                }
+                if ("1".equals(picType)) {
+                    returnUrl = img1920;
+                }
+                if ("2".equals(picType)) {
+                    returnUrl = img1080;
+                }
+                response.sendRedirect(returnUrl);
+            }
+
         }
+
+        // https://cn.bing.com/th?id=OHR.BorrowingDays_ZH-CN3558219803_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp // 原链接
+
+        // https://cn.bing.com/th?id=OHR.BorrowingDays_ZH-CN3558219803_1366x768.jpg
+        // https://cn.bing.com/th?id=OHR.BorrowingDays_ZH-CN3558219803_1920x1080.jpg // 桌面版
+        // https://cn.bing.com/th?id=OHR.BorrowingDays_ZH-CN3558219803_1080x1920.jpg // 手机
+        // https://cn.bing.com/th?id=OHR.BorrowingDays_ZH-CN3558219803_UHD.jpg // 原图
+
 
         return commonResponse;
 
