@@ -295,5 +295,11 @@ Content-Type: multipart/form-data;charset=UTF-8
 + 获取随机图片
 ```
 ### 获取随机图片
-GET https://www.myindex.top/api/common/v1/getPicture
+GET https://www.myindex.top/api/common/v1/getPicture/{getType}/{picType}
+
+* getType 获取方式 随机(random) 最新(lastest)
+* picType 图片类型 原图(source) 电脑端(pc) 手机端(phone)
+
+示例URL https://www.myindex.top/api/common/v1/getPicture/random/phone
+
 ```
