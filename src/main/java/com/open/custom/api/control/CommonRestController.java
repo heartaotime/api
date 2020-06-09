@@ -1,16 +1,13 @@
 package com.open.custom.api.control;
 
 import com.jcraft.jsch.ChannelSftp;
+import com.open.custom.api.config.SFtpConfig;
 import com.open.custom.api.domain.common.CommonRequest;
 import com.open.custom.api.domain.common.CommonResponse;
-import com.open.custom.api.config.SFtpConfig;
-import com.open.custom.api.domain.request.QryPicRequest;
 import com.open.custom.api.exception.BusiException;
 import com.open.custom.api.factory.SftpSessionFactory;
 import com.open.custom.api.model.OpenAppInfo;
-import com.open.custom.api.model.OpenAppInfoExample;
 import com.open.custom.api.model.OpenStaticData;
-import com.open.custom.api.model.OpenStaticDataExample;
 import com.open.custom.api.service.IOpenAppInfoService;
 import com.open.custom.api.service.IOpenStaticDataService;
 import com.open.custom.api.service.RedisService;
@@ -23,21 +20,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileUrlResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.net.URL;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Api(description = "通用服务")
 @RestController
@@ -133,42 +128,58 @@ public class CommonRestController {
 
     @ApiOperation(value = "获取随机图片")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "picType", value = "图片类型 0:原图 1：PC 2：手机", required = false, dataType = "String")
+            @ApiImplicitParam(name = "getType", value = "获取方式 随机(random) 最新(lastest)", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "picType", value = "图片类型 原图(source) 电脑端(pc) 手机端(phone)", required = true, dataType = "String")
     })
-    @GetMapping(value = "/getPicture/{picType}")
+    @GetMapping(value = "/getPicture/{getType}/{picType}")
     public CommonResponse<String> getPicture(
-            @PathVariable(value = "picType", required = false) String picType,
+            @PathVariable(value = "getType", required = true) String getType,
+            @PathVariable(value = "picType", required = true) String picType,
 //            @RequestParam(value = "picType", required = false) String picType,
             HttpServletResponse response) throws IOException {
         CommonResponse<String> commonResponse = new CommonResponse();
 
-
         List<OpenStaticData> openStaticData = iOpenStaticDataService.getStaticDataByCodeType("BY_IMG");
         if (!CollectionUtils.isEmpty(openStaticData)) {
+
+            Collections.sort(openStaticData, new Comparator<OpenStaticData>() {
+                @Override
+                public int compare(OpenStaticData o1, OpenStaticData o2) {
+                    return -(o1.getSort() - o2.getSort());
+                }
+            });
+
+            String returnUrl = "";
             int size = openStaticData.size();
-            // 获取 1 - size 的随机数
-            int random = (int) (1 + Math.random() * size);
-            String codeValue = openStaticData.get(random - 1).getCodeValue();
-            if (!StringUtils.isEmpty(codeValue)) {
-                String img1920 = codeValue.substring(0, codeValue.indexOf("&"));
+            if ("random".equals(getType)) {
+                // 获取 1 - size 的随机数
+                int random = (int) (1 + Math.random() * size);
+                returnUrl = openStaticData.get(random - 1).getCodeValue();
+            }
+            if ("lastest".equals(getType)) {
+                returnUrl = openStaticData.get(0).getCodeValue();
+            }
+
+            if (!StringUtils.isEmpty(returnUrl)) {
+                String img1920 = returnUrl.substring(0, returnUrl.indexOf("&"));
 
                 String img1366 = img1920.replaceAll("1920x1080", "1366x768");
                 String img1080 = img1920.replaceAll("1920x1080", "1080x1920");
                 String imgUHD = img1920.replaceAll("1920x1080", "UHD");
 
-                String returnUrl = img1920;
-                if ("0".equals(picType)) {
+                returnUrl = img1920;
+                if ("source".equals(picType)) {
                     returnUrl = imgUHD;
                 }
-                if ("1".equals(picType)) {
+                if ("pc".equals(picType)) {
                     returnUrl = img1920;
                 }
-                if ("2".equals(picType)) {
+                if ("phone".equals(picType)) {
                     returnUrl = img1080;
                 }
-                response.sendRedirect(returnUrl);
             }
 
+            response.sendRedirect(returnUrl);
         }
 
         // https://cn.bing.com/th?id=OHR.BorrowingDays_ZH-CN3558219803_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp // 原链接

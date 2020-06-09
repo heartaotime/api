@@ -108,8 +108,9 @@ public class OpenStaticDataServiceImpl implements IOpenStaticDataService {
             OpenStaticDataExample.Criteria criteria = example.createCriteria();
             criteria.andCodeTypeEqualTo(codeType);
             criteria.andStateEqualTo(1);
+            example.setOrderByClause(" sort asc ");
             openStaticDatas = selectByExample(example);
-            redisService.set(OPEN_STATIC_DATA, codeType);
+            redisService.hset(OPEN_STATIC_DATA, codeType, openStaticDatas);
         } else {
             openStaticDatas = (List<OpenStaticData>) cacheData;
         }
