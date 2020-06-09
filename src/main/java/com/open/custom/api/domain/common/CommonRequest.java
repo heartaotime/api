@@ -20,10 +20,10 @@ public class CommonRequest<T> {
     @ApiModelProperty(value = "是否分页")
     private Boolean pageFlag = true;
 
-    @ApiModelProperty(value = "当前页码")
+    @ApiModelProperty(value = "当前页码", example = "1")
     private Integer pageNum = 1;
 
-    @ApiModelProperty(value = "每页条数")
+    @ApiModelProperty(value = "每页条数", example = "10")
     private Integer pageSize = 10;
 
     @ApiModelProperty(value = "是否读取redis")
