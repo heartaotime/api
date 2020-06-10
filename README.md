@@ -292,9 +292,9 @@ Content-Type: multipart/form-data;charset=UTF-8
 ```
 ![文件上传请求示例](https://www.myindex.top/file/myfile/uploadapi.png "文件上传请求示例")
 
-+ 获取随机图片
++ 获取图片
 ```
-### 获取随机图片
+### 获取图片
 GET https://www.myindex.top/api/common/v1/getPicture/{getType}/{picType}
 
 * getType 获取方式 随机(random) 最新(lastest)

@@ -62,6 +62,9 @@ public class CommonRestController {
     @Value("${spring.mail.username}")
     private String mailUserName;
 
+    @Value("${uploadpath.myfile}")
+    private String myfile;
+
     @Value("${uploadpath.open}")
     private String openPath;
 
@@ -104,12 +107,12 @@ public class CommonRestController {
         CommonResponse<String> response = new CommonResponse();
 
         if (StringUtils.isEmpty(appCode)) {
-            throw new BusiException("appCode不能为空");
+            throw new BusiException("appCode 不能为空");
         }
         OpenAppInfo openAppInfo = iOpenAppInfoService.assertAppCode(appCode);
 
         if (file.isEmpty()) {
-            throw new BusiException("文件不能为空");
+            throw new BusiException("文件 不能为空");
         }
 
         String path = openPath + appCode + "/" + DateUtils.getCurDateStr(DateUtils.YYYYMMDD);
@@ -126,7 +129,38 @@ public class CommonRestController {
         return response;
     }
 
-    @ApiOperation(value = "获取随机图片")
+    @ApiOperation(value = "个人文件上传")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fileName", value = "文件名称", required = true, dataType = "String")
+    })
+    @PostMapping(value = "/cusupload")
+    public CommonResponse<String> cusupload(@RequestParam("file") MultipartFile file, @RequestParam("fileName") String fileName) throws Exception {
+        CommonResponse<String> response = new CommonResponse();
+
+        if (StringUtils.isEmpty(fileName)) {
+            throw new BusiException("fileName 不能为空");
+        }
+
+        if (file.isEmpty()) {
+            throw new BusiException("文件 不能为空");
+        }
+
+        String path = myfile;
+
+        String originalFilename = file.getOriginalFilename();
+
+        String type = originalFilename.substring(originalFilename.lastIndexOf("."));
+
+        // String fileName = UUID.randomUUID().toString().replaceAll("-", "") + type;
+        String saveFileName = fileName + type;
+        ChannelSftp session = sftpSessionFactory.getSession(path);
+        session.put(file.getInputStream(), saveFileName);
+        response.setData(baseUrl + sFtpConfig.getBasePath() + path + saveFileName);
+
+        return response;
+    }
+
+    @ApiOperation(value = "获取图片")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "getType", value = "获取方式 随机(random) 最新(lastest)", required = true, dataType = "String"),
             @ApiImplicitParam(name = "picType", value = "图片类型 原图(source) 电脑端(pc) 手机端(phone)", required = true, dataType = "String")
