@@ -634,6 +634,76 @@ public class OpenStaticDataExample {
             return (Criteria) this;
         }
 
+        public Criteria andAppCodeIsNull() {
+            addCriterion("APP_CODE is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeIsNotNull() {
+            addCriterion("APP_CODE is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeEqualTo(String value) {
+            addCriterion("APP_CODE =", value, "appCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeNotEqualTo(String value) {
+            addCriterion("APP_CODE <>", value, "appCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeGreaterThan(String value) {
+            addCriterion("APP_CODE >", value, "appCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("APP_CODE >=", value, "appCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeLessThan(String value) {
+            addCriterion("APP_CODE <", value, "appCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeLessThanOrEqualTo(String value) {
+            addCriterion("APP_CODE <=", value, "appCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeLike(String value) {
+            addCriterion("APP_CODE like", value, "appCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeNotLike(String value) {
+            addCriterion("APP_CODE not like", value, "appCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeIn(List<String> values) {
+            addCriterion("APP_CODE in", values, "appCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeNotIn(List<String> values) {
+            addCriterion("APP_CODE not in", values, "appCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeBetween(String value1, String value2) {
+            addCriterion("APP_CODE between", value1, value2, "appCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeNotBetween(String value1, String value2) {
+            addCriterion("APP_CODE not between", value1, value2, "appCode");
+            return (Criteria) this;
+        }
+
         public Criteria andExt1IsNull() {
             addCriterion("EXT1 is null");
             return (Criteria) this;

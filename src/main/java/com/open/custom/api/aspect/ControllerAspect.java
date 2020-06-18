@@ -67,6 +67,10 @@ public class ControllerAspect {
     public void userControllerAspect() {
     }
 
+    @Pointcut("execution(public * com.open.custom.api.control.CommonRestController.getOpenStaticData(..))")
+    public void commonRestControllerAspect() {
+    }
+
     /**
      * Around 手动控制调用核心业务逻辑，以及调用前和调用后的处理,
      * <p>
@@ -194,8 +198,7 @@ public class ControllerAspect {
         }
     }
 
-    @Before(value = "userControllerAspect()")
-    public void beforeAdvice(JoinPoint joinPoint) throws Throwable {
+    private void check(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         if (args == null || args[0] == null) {
             throw new BusiException("请求参数不能为空");
@@ -213,24 +216,16 @@ public class ControllerAspect {
             }
             iOpenAppInfoService.assertAppCode(appCode);
         }
+    }
 
-//        String argsStr = gson.toJson(args[0]);
 
-//        CommonRequest commonRequest = gson.fromJson(argsStr, CommonRequest.class);
-//        if (commonRequest == null) {
-//            throw new BusiException("请求参数不能为空");
-//        }
-//        String appCode = commonRequest.getAppCode();
-//        if (StringUtils.isEmpty(appCode)) {
-//            throw new BusiException("appCode不能为空");
-//        }
-//
-//        OpenAppInfo openAppInfo = iOpenAppInfoService.assertAppCode(appCode);
+    @Before(value = "userControllerAspect()")
+    public void beforeAdvice(JoinPoint joinPoint) throws Throwable {
+        check(joinPoint);
+    }
 
-//        Integer count = iOpenAppInfoService.checkAppExist(appCode);
-//        if (count == null || count < 1) {
-//            throw new BusiException("appCode不存在");
-//        }
-
+    @Before(value = "commonRestControllerAspect()")
+    public void beforeAdviceCommon(JoinPoint joinPoint) throws Throwable {
+        check(joinPoint);
     }
 }

@@ -29,6 +29,16 @@ public class CommonRequest<T> {
     @ApiModelProperty(value = "是否读取redis")
     private Boolean readRedis = true;
 
+    @ApiModelProperty(value = "排序：sort desc")
+    private String orderBy;
+
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
+    }
 
     public String getAppCode() {
         return appCode;

@@ -1,13 +1,15 @@
 package com.open.custom.api.control;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jcraft.jsch.ChannelSftp;
 import com.open.custom.api.config.SFtpConfig;
 import com.open.custom.api.domain.common.CommonRequest;
 import com.open.custom.api.domain.common.CommonResponse;
 import com.open.custom.api.exception.BusiException;
 import com.open.custom.api.factory.SftpSessionFactory;
-import com.open.custom.api.model.OpenAppInfo;
-import com.open.custom.api.model.OpenStaticData;
+import com.open.custom.api.model.*;
+import com.open.custom.api.model.bean.OpenUserInfoBean;
 import com.open.custom.api.service.IOpenAppInfoService;
 import com.open.custom.api.service.IOpenStaticDataService;
 import com.open.custom.api.service.RedisService;
@@ -28,10 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Api(description = "通用服务")
@@ -242,4 +241,55 @@ public class CommonRestController {
 //            e3.printStackTrace();
 //        }
     }
+
+
+    @ApiOperation(value = "获取静态配置项（分页）")
+    @PostMapping(value = "/getOpenStaticData")
+    public CommonResponse<PageInfo<OpenStaticData>> getOpenStaticData(@RequestBody CommonRequest<OpenStaticData> commonRequest) {
+        CommonResponse<PageInfo<OpenStaticData>> response = new CommonResponse();
+        String appCode = commonRequest.getAppCode();
+
+
+        OpenStaticData param = commonRequest.getParam();
+        String codeType = param.getCodeType();
+
+        Boolean pageFlag = commonRequest.getPageFlag();
+        Integer pageNum = commonRequest.getPageNum();
+        Integer pageSize = commonRequest.getPageSize();
+        String orderBy = commonRequest.getOrderBy();
+
+
+        if (StringUtils.isEmpty(codeType)) {
+            throw new BusiException("codeType 不能为空");
+        }
+
+
+        OpenStaticDataExample example = new OpenStaticDataExample();
+        OpenStaticDataExample.Criteria criteria = example.createCriteria();
+        criteria.andStateEqualTo(1);
+        criteria.andAppCodeEqualTo(appCode);
+        criteria.andCodeTypeEqualTo(codeType);
+
+        if (StringUtils.isEmpty(orderBy)) {
+            example.setOrderByClause(" SORT ASC ");
+        } else {
+            example.setOrderByClause(" " + orderBy + " ");
+        }
+
+
+        if (pageFlag) {
+            PageHelper.startPage(pageNum, pageSize);
+        }
+        List<OpenStaticData> openStaticDatas = iOpenStaticDataService.selectByExampleWithBLOBs(example);
+        PageInfo<OpenStaticData> pageInfo = new PageInfo<>(openStaticDatas);
+
+        if (pageFlag) {
+            PageHelper.clearPage();
+        }
+
+
+        response.setData(pageInfo);
+        return response;
+    }
+
 }

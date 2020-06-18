@@ -17,6 +17,8 @@ public class OpenStaticData {
 
     private Integer state;
 
+    private String appCode;
+
     private String ext1;
 
     private String ext2;
@@ -87,6 +89,14 @@ public class OpenStaticData {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode == null ? null : appCode.trim();
     }
 
     public String getExt1() {
