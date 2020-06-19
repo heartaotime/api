@@ -54,7 +54,6 @@ public class CommonRestController {
     @Autowired
     private SftpSessionFactory sftpSessionFactory;
 
-
     @Autowired
     private IOpenStaticDataService iOpenStaticDataService;
 
@@ -93,6 +92,14 @@ public class CommonRestController {
     public CommonResponse<String> flushRedis(CommonRequest<String> commonRequest) throws IOException {
         CommonResponse<String> commonResponse = new CommonResponse();
         redisService.del(OPEN_APP_INFO, OPEN_STATIC_DATA);
+        return commonResponse;
+    }
+
+    @ApiOperation(value = "把OPEN_STATIC_DATA表数据全量同步到redis")
+    @GetMapping(value = "/saveOpenStaticData2Redis")
+    public CommonResponse<String> saveOpenStaticData2Redis(CommonRequest<String> commonRequest) throws IOException {
+        CommonResponse<String> commonResponse = new CommonResponse();
+        iOpenStaticDataService.saveData2Redis();
         return commonResponse;
     }
 
@@ -263,33 +270,75 @@ public class CommonRestController {
             throw new BusiException("codeType 不能为空");
         }
 
+        Comparator<OpenStaticData> comparator = null;
+        if ("BY_IMG".equals(codeType)) {
+            comparator = new Comparator<OpenStaticData>() {
+                @Override
+                public int compare(OpenStaticData o1, OpenStaticData o2) {
+                    return -(o1.getSort() - o2.getSort());
+                }
+            };
+        }
 
-        OpenStaticDataExample example = new OpenStaticDataExample();
-        OpenStaticDataExample.Criteria criteria = example.createCriteria();
-        criteria.andStateEqualTo(1);
-        criteria.andAppCodeEqualTo(appCode);
-        criteria.andCodeTypeEqualTo(codeType);
-
-        if (StringUtils.isEmpty(orderBy)) {
-            example.setOrderByClause(" SORT ASC ");
+        PageInfo<OpenStaticData> pageInfo = new PageInfo<OpenStaticData>();
+        if (pageFlag) {
+            pageInfo = iOpenStaticDataService.getStaticDataByCodeType(codeType, pageNum, pageSize, comparator);
         } else {
-            example.setOrderByClause(" " + orderBy + " ");
+            pageInfo.setList(iOpenStaticDataService.getStaticDataByCodeType(codeType, comparator));
         }
-
-
-        if (pageFlag) {
-            PageHelper.startPage(pageNum, pageSize);
-        }
-        List<OpenStaticData> openStaticDatas = iOpenStaticDataService.selectByExampleWithBLOBs(example);
-        PageInfo<OpenStaticData> pageInfo = new PageInfo<>(openStaticDatas);
-
-        if (pageFlag) {
-            PageHelper.clearPage();
-        }
-
 
         response.setData(pageInfo);
         return response;
     }
+
+
+//    @ApiOperation(value = "获取静态配置项（分页）")
+//    @PostMapping(value = "/getOpenStaticData")
+//    public CommonResponse<PageInfo<OpenStaticData>> getOpenStaticData(@RequestBody CommonRequest<OpenStaticData> commonRequest) {
+//        CommonResponse<PageInfo<OpenStaticData>> response = new CommonResponse();
+//        String appCode = commonRequest.getAppCode();
+//
+//
+//        OpenStaticData param = commonRequest.getParam();
+//        String codeType = param.getCodeType();
+//
+//        Boolean pageFlag = commonRequest.getPageFlag();
+//        Integer pageNum = commonRequest.getPageNum();
+//        Integer pageSize = commonRequest.getPageSize();
+//        String orderBy = commonRequest.getOrderBy();
+//
+//
+//        if (StringUtils.isEmpty(codeType)) {
+//            throw new BusiException("codeType 不能为空");
+//        }
+//
+//
+//        OpenStaticDataExample example = new OpenStaticDataExample();
+//        OpenStaticDataExample.Criteria criteria = example.createCriteria();
+//        criteria.andStateEqualTo(1);
+//        criteria.andAppCodeEqualTo(appCode);
+//        criteria.andCodeTypeEqualTo(codeType);
+//
+//        if (StringUtils.isEmpty(orderBy)) {
+//            example.setOrderByClause(" SORT ASC ");
+//        } else {
+//            example.setOrderByClause(" " + orderBy + " ");
+//        }
+//
+//
+//        if (pageFlag) {
+//            PageHelper.startPage(pageNum, pageSize);
+//        }
+//        List<OpenStaticData> openStaticDatas = iOpenStaticDataService.selectByExampleWithBLOBs(example);
+//        PageInfo<OpenStaticData> pageInfo = new PageInfo<>(openStaticDatas);
+//
+//        if (pageFlag) {
+//            PageHelper.clearPage();
+//        }
+//
+//
+//        response.setData(pageInfo);
+//        return response;
+//    }
 
 }

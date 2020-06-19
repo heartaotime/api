@@ -1,9 +1,11 @@
 package com.open.custom.api.service;
 
+import com.github.pagehelper.PageInfo;
 import com.open.custom.api.model.OpenStaticData;
 import com.open.custom.api.model.OpenStaticDataExample;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Comparator;
 import java.util.List;
 
 public interface IOpenStaticDataService {
@@ -36,4 +38,12 @@ public interface IOpenStaticDataService {
     int updateByPrimaryKey(OpenStaticData record);
 
     List<OpenStaticData> getStaticDataByCodeType(String codeType);
+    List<OpenStaticData> getStaticDataByCodeType(String codeType, Comparator comparator);
+
+    PageInfo<OpenStaticData> getStaticDataByCodeType(String codeType, int pageNum, int pageSize);
+
+    PageInfo<OpenStaticData> getStaticDataByCodeType(String codeType, int pageNum, int pageSize, Comparator comparator);
+
+    void saveData2Redis();
+
 }

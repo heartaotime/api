@@ -1,8 +1,12 @@
 package com.open.custom.api.task;
 
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.open.custom.api.model.OpenStaticData;
+import com.open.custom.api.model.OpenStaticDataExample;
+import com.open.custom.api.model.OpenUserInfo;
 import com.open.custom.api.service.IOpenStaticDataService;
 import com.open.custom.api.service.RedisService;
 import com.open.custom.api.utils.HttpClientUtil;
@@ -15,6 +19,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +39,7 @@ public class TaskService {
 
     @Value("${custCacheKey.OPEN_STATIC_DATA}")
     private String OPEN_STATIC_DATA;
+
 
 
     // 获取 必应每日一图

@@ -10,6 +10,7 @@
     <result column="SORT" property="sort" jdbcType="INTEGER" />
     <result column="CODE_PAR_TYPE" property="codeParType" jdbcType="VARCHAR" />
     <result column="STATE" property="state" jdbcType="INTEGER" />
+    <result column="APP_CODE" property="appCode" jdbcType="VARCHAR" />
     <result column="EXT1" property="ext1" jdbcType="VARCHAR" />
     <result column="EXT2" property="ext2" jdbcType="VARCHAR" />
     <result column="EXT3" property="ext3" jdbcType="VARCHAR" />
@@ -76,8 +77,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    ID, CODE_TYPE, CODE_NAME, CODE_VALUE, CODE_DESC, SORT, CODE_PAR_TYPE, STATE, EXT1, 
-    EXT2, EXT3
+    ID, CODE_TYPE, CODE_NAME, CODE_VALUE, CODE_DESC, SORT, CODE_PAR_TYPE, STATE, APP_CODE, 
+    EXT1, EXT2, EXT3
   </sql>
   <sql id="Blob_Column_List" >
     BIG_DATA
@@ -135,13 +136,13 @@
   <insert id="insert" parameterType="com.open.custom.api.model.OpenStaticData" >
     insert into OPEN_STATIC_DATA (ID, CODE_TYPE, CODE_NAME, 
       CODE_VALUE, CODE_DESC, SORT, 
-      CODE_PAR_TYPE, STATE, EXT1, 
-      EXT2, EXT3, BIG_DATA
+      CODE_PAR_TYPE, STATE, APP_CODE, 
+      EXT1, EXT2, EXT3, BIG_DATA
       )
     values (#{id,jdbcType=INTEGER}, #{codeType,jdbcType=VARCHAR}, #{codeName,jdbcType=VARCHAR}, 
       #{codeValue,jdbcType=VARCHAR}, #{codeDesc,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, 
-      #{codeParType,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{ext1,jdbcType=VARCHAR}, 
-      #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR}, #{bigData,jdbcType=LONGVARCHAR}
+      #{codeParType,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{appCode,jdbcType=VARCHAR}, 
+      #{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR}, #{bigData,jdbcType=LONGVARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.open.custom.api.model.OpenStaticData" >
@@ -170,6 +171,9 @@
       </if>
       <if test="state != null" >
         STATE,
+      </if>
+      <if test="appCode != null" >
+        APP_CODE,
       </if>
       <if test="ext1 != null" >
         EXT1,
@@ -208,6 +212,9 @@
       </if>
       <if test="state != null" >
         #{state,jdbcType=INTEGER},
+      </if>
+      <if test="appCode != null" >
+        #{appCode,jdbcType=VARCHAR},
       </if>
       <if test="ext1 != null" >
         #{ext1,jdbcType=VARCHAR},
@@ -256,6 +263,9 @@
       <if test="record.state != null" >
         STATE = #{record.state,jdbcType=INTEGER},
       </if>
+      <if test="record.appCode != null" >
+        APP_CODE = #{record.appCode,jdbcType=VARCHAR},
+      </if>
       <if test="record.ext1 != null" >
         EXT1 = #{record.ext1,jdbcType=VARCHAR},
       </if>
@@ -283,6 +293,7 @@
       SORT = #{record.sort,jdbcType=INTEGER},
       CODE_PAR_TYPE = #{record.codeParType,jdbcType=VARCHAR},
       STATE = #{record.state,jdbcType=INTEGER},
+      APP_CODE = #{record.appCode,jdbcType=VARCHAR},
       EXT1 = #{record.ext1,jdbcType=VARCHAR},
       EXT2 = #{record.ext2,jdbcType=VARCHAR},
       EXT3 = #{record.ext3,jdbcType=VARCHAR},
@@ -301,6 +312,7 @@
       SORT = #{record.sort,jdbcType=INTEGER},
       CODE_PAR_TYPE = #{record.codeParType,jdbcType=VARCHAR},
       STATE = #{record.state,jdbcType=INTEGER},
+      APP_CODE = #{record.appCode,jdbcType=VARCHAR},
       EXT1 = #{record.ext1,jdbcType=VARCHAR},
       EXT2 = #{record.ext2,jdbcType=VARCHAR},
       EXT3 = #{record.ext3,jdbcType=VARCHAR}
@@ -332,6 +344,9 @@
       <if test="state != null" >
         STATE = #{state,jdbcType=INTEGER},
       </if>
+      <if test="appCode != null" >
+        APP_CODE = #{appCode,jdbcType=VARCHAR},
+      </if>
       <if test="ext1 != null" >
         EXT1 = #{ext1,jdbcType=VARCHAR},
       </if>
@@ -356,6 +371,7 @@
       SORT = #{sort,jdbcType=INTEGER},
       CODE_PAR_TYPE = #{codeParType,jdbcType=VARCHAR},
       STATE = #{state,jdbcType=INTEGER},
+      APP_CODE = #{appCode,jdbcType=VARCHAR},
       EXT1 = #{ext1,jdbcType=VARCHAR},
       EXT2 = #{ext2,jdbcType=VARCHAR},
       EXT3 = #{ext3,jdbcType=VARCHAR},
@@ -371,6 +387,7 @@
       SORT = #{sort,jdbcType=INTEGER},
       CODE_PAR_TYPE = #{codeParType,jdbcType=VARCHAR},
       STATE = #{state,jdbcType=INTEGER},
+      APP_CODE = #{appCode,jdbcType=VARCHAR},
       EXT1 = #{ext1,jdbcType=VARCHAR},
       EXT2 = #{ext2,jdbcType=VARCHAR},
       EXT3 = #{ext3,jdbcType=VARCHAR}
