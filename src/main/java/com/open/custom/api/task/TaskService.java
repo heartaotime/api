@@ -96,8 +96,7 @@ public class TaskService {
             openStaticData.setExt1(copyrightlink);
             iOpenStaticDataService.insertSelective(openStaticData);
 
-            redisService.hdel(OPEN_STATIC_DATA, openStaticData.getCodeType());
-            iOpenStaticDataService.getStaticDataByCodeType(openStaticData.getCodeType());
+            iOpenStaticDataService.saveData2Redis();
         } catch (Exception e) {
             e.printStackTrace();
             log.error("TaskService.getBYRT catch Exception, ", e);
