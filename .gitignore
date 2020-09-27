@@ -32,6 +32,6 @@ build/
 
 
 .mvn
-src/main/resources/*.yml
-src/main/resources/generator/*
+#src/main/resources/*.yml
+#src/main/resources/generator/*
 
