@@ -109,7 +109,7 @@ public class YsRestController {
 
             title = "有新的测一测通过并填写邮寄地址了";
             content = "公司名称：" + ysCustUserInfo.getCompanyName() + " \n打卡人数：" + ysCustUserInfo.getClockNum()
-                    + "收件人：" + revName + " \n电话：" + contactNum + " \n收货地址：" + address;
+                    + "\n收件人：" + revName + " \n电话：" + contactNum + " \n收货地址：" + address + " \n备注：" + param.getRemark();
         }
 
         if (i < 1) {
