@@ -108,7 +108,8 @@ public class YsRestController {
             i = iYsCustUserInfoService.updateByPrimaryKeySelective(param);
 
             title = "有新的测一测通过并填写邮寄地址了";
-            content = "收件人：" + revName + " \n电话：" + contactNum + " \n收货地址：" + address;
+            content = "公司名称：" + ysCustUserInfo.getCompanyName() + " \n打卡人数：" + ysCustUserInfo.getClockNum()
+                    + "收件人：" + revName + " \n电话：" + contactNum + " \n收货地址：" + address;
         }
 
         if (i < 1) {
