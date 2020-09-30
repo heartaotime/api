@@ -88,6 +88,7 @@ public class SendMailUtils {
                         log.info("获取锁失败: " + MAIL_MESSAGE_LOCK);
                         return;
                     }
+//                    log.info("获取锁成功: " + MAIL_MESSAGE_LOCK);
 
                     Map<Object, Object> messages = redisService.hmget(MAIL_MESSAGE);
                     if (CollectionUtils.isEmpty(messages)) {
@@ -140,6 +141,7 @@ public class SendMailUtils {
                 } finally {
                     if (lock) {
                         // 拿到锁 完成后就需要释放锁
+//                        log.info("释放锁: " + MAIL_MESSAGE_LOCK);
                         redisService.releaseLock(MAIL_MESSAGE_LOCK);
                     }
                 }
