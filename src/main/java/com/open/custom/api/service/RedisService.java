@@ -575,4 +575,27 @@ public class RedisService {
             return 0;
         }
     }
+
+    /**
+     * Description: 获得锁
+     *
+     * @param lockId
+     * @param millisecond
+     * @Return boolean
+     */
+    public boolean getLock(String lockId, long millisecond) {
+        Boolean success = redisTemplate.opsForValue().setIfAbsent(lockId, "lock", millisecond, TimeUnit.MILLISECONDS);
+        return success != null && success;
+    }
+
+    /**
+     * Description: 释放锁
+     *
+     * @param lockId
+     * @Return void
+     */
+    public void releaseLock(String lockId) {
+        redisTemplate.delete(lockId);
+    }
+
 }
