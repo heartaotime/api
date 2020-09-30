@@ -7,6 +7,7 @@ import com.open.custom.api.model.OpenAppInfoExample;
 import com.open.custom.api.model.YsCustUserInfo;
 import com.open.custom.api.service.IYsCustUserInfoService;
 import com.open.custom.api.service.RedisService;
+import com.open.custom.api.utils.SendMailUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -116,16 +117,12 @@ public class YsRestController {
             throw new BusiException("保存失败");
         }
 
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(mailUserName);
-            message.setTo(mailUserName);
-            message.setSubject(title);
-            message.setText(content);
-            mailSender.send(message);
-        } catch (Exception e) {
-            log.error("sendEMail catch Exception {}", e);
-        }
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(mailUserName);
+        message.setSubject(title);
+        message.setText(content);
+        SendMailUtils.addMsg(message);
+
 
         return response;
     }

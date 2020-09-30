@@ -18,6 +18,7 @@ import com.open.custom.api.service.RedisService;
 import com.open.custom.api.service.IOpenUserInfoExtService;
 import com.open.custom.api.service.IOpenUserInfoService;
 import com.open.custom.api.utils.DateUtils;
+import com.open.custom.api.utils.SendMailUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -53,9 +54,6 @@ public class UserRestController {
 
     @Autowired
     private IOpenAppInfoService iOpenAppInfoService;
-
-    @Autowired
-    private JavaMailSender mailSender;
 
     @Autowired
     private RedisService redisService;
@@ -118,20 +116,14 @@ public class UserRestController {
             verifyCode += tmp;
         }
 
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(mailUserName);
-            message.setTo(email);
-            message.setSubject("开放API平台验证码，来自应用[" + appName + "]");
-            message.setText("你好：验证码为 " + verifyCode + " (该验证码5分钟内有效)");
-            mailSender.send(message);
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("开放API平台验证码，来自应用[" + appName + "]");
+        message.setText("你好：验证码为 " + verifyCode + " (该验证码5分钟内有效)");
+        SendMailUtils.addMsg(message);
 
-            redisService.set(appCode + "|" + email, verifyCode, 5 * 60);
+        redisService.set(appCode + "|" + email, verifyCode, 5 * 60);
 
-        } catch (Exception e) {
-            log.error("sendEMail catch Exception {}", e);
-            throw new BusiException("发送验证码失败");
-        }
         return response;
     }
 
@@ -190,30 +182,26 @@ public class UserRestController {
             OpenAppInfo openAppInfo = iOpenAppInfoService.assertAppCode(appCode);
 
             // 发送邮件通知管理员新用户注册
-            try {
-                String appName = openAppInfo.getAppName();
+            String appName = openAppInfo.getAppName();
 
-                OpenUserInfoExample example = new OpenUserInfoExample();
-                OpenUserInfoExample.Criteria criteria = example.createCriteria();
-                criteria.andStateEqualTo(1);
-                criteria.andAppCodeEqualTo(appCode);
-                int allCount = iOpenUserInfoService.countByExample(example);
+            OpenUserInfoExample example = new OpenUserInfoExample();
+            OpenUserInfoExample.Criteria criteria = example.createCriteria();
+            criteria.andStateEqualTo(1);
+            criteria.andAppCodeEqualTo(appCode);
+            int allCount = iOpenUserInfoService.countByExample(example);
 
-                SimpleMailMessage message = new SimpleMailMessage();
-                message.setFrom(mailUserName);
-                message.setTo(mailUserName);
-                message.setSubject("开放API平台新用户注册通知，来自应用[" + appName + "]");
-                message.setText(
-                        "你好：" +
-                                "\n    有新用户注册了" +
-                                "\n    用户名：" + userInfo.getUserName() +
-                                "\n    邮箱：" + userInfo.getEmail() +
-                                "\n    注册时间：" + DateUtils.getDateStr(userInfo.getCreateDate()) +
-                                "\n    总注册用户数：" + allCount);
-                mailSender.send(message);
-            } catch (Exception e) {
-                log.error("sendEMail catch Exception {}", e);
-            }
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(mailUserName);
+            message.setSubject("开放API平台新用户注册通知，来自应用[" + appName + "]");
+            message.setText(
+                    "你好：" +
+                            "\n    有新用户注册了" +
+                            "\n    用户名：" + userInfo.getUserName() +
+                            "\n    邮箱：" + userInfo.getEmail() +
+                            "\n    注册时间：" + DateUtils.getDateStr(userInfo.getCreateDate()) +
+                            "\n    总注册用户数：" + allCount);
+            SendMailUtils.addMsg(message);
+
         } else {
             throw new BusiException("新增用户失败！");
         }

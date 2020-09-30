@@ -33,9 +33,6 @@ public class AppRestController {
     private IOpenAppInfoService iOpenAppInfoService;
 
     @Autowired
-    private JavaMailSender mailSender;
-
-    @Autowired
     private RedisService redisService;
 
     @Value("${spring.mail.username}")

@@ -46,9 +46,6 @@ public class CommonRestController {
     private IOpenAppInfoService iOpenAppInfoService;
 
     @Autowired
-    private JavaMailSender mailSender;
-
-    @Autowired
     private RedisService redisService;
 
     @Autowired
