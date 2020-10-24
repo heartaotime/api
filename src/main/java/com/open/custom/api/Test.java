@@ -52,22 +52,22 @@ public class Test {
 //         HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
 //        workbook.setForceFormulaRecalculation(true);
         //XSSFFormulaEvaluator.evaluateAllFormulaCells((XSSFWorkbook）book）;
-//        workbook.getCreationHelper().createFormulaEvaluator().evaluateAll();
+        workbook.getCreationHelper().createFormulaEvaluator().evaluateAll();
+
 
         System.out.println(workbook.getSheetName(0));
         Sheet firstSheet = workbook.getSheetAt(0);
-        Row r2 = firstSheet.getRow(41);
+        Row r2 = firstSheet.getRow(59);
         Cell cell = r2.getCell(1);
         int cellType = cell.getCellType();
 
         String cellFormula = cell.getCellFormula();
         System.out.println(cellFormula);
-        cell.setCellFormula(cellFormula);
-        FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-        evaluator.evaluateInCell(cell);
-//        String cellValue = cell.getStringCellValue();
-        String cellValue = cell.getNumericCellValue() + "";
-        System.out.println(cellValue);
+//        FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+//        evaluator.evaluateInCell(cell);
+////        String cellValue = cell.getStringCellValue();
+//        String cellValue = cell.getNumericCellValue() + "";
+        System.out.println(cell.getStringCellValue());
     }
 
 

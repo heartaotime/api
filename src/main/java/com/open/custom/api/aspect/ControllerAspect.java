@@ -130,7 +130,7 @@ public class ControllerAspect {
                     CommonRequest commonRequest = (CommonRequest) arg;
                     appCode = commonRequest.getAppCode();
                     Object param = commonRequest.getParam();
-                    if (param != null) {
+                    if (param != null && param instanceof Map) {
                         Map map = gson.fromJson(gson.toJson(param), Map.class);
                         if (!CollectionUtils.isEmpty(map)) {
                             Object userCodeObj = map.get("userCode");

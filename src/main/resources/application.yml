@@ -1,5 +1,5 @@
 server:
-  port: 5000
+  port: 5555
   servlet:
     context-path: /api
 
@@ -11,12 +11,13 @@ spring:
 
   datasource:
     name: mysql-app
-    url: jdbc:mysql://127.0.0.1:3306/app?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://127.0.0.1:3306/app?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: root
     password: 1qaz!QAZ
     # 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.jdbc.Driver
+    #    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     filters: stat
     maxActive: 20
     initialSize: 1
@@ -102,13 +103,18 @@ userhome: /root
 
 
 uploadpath:
+  myfile: myfile/
   open: open/
   opentemp: opentemp/
 
 baseUrl: https://www.myindex.top
 
+baseUrlSwigger: www.myindex.top
+
+
 custCacheKey:
   OPEN_APP_INFO: OPEN_APP_INFO
+  OPEN_STATIC_DATA: OPEN_STATIC_DATA
 
 
 
@@ -118,7 +124,7 @@ custCacheKey:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:mysql://139.186.66.121:3306/app?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://139.186.66.121:3306/app?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
 
   redis:
     host: 139.186.66.121
@@ -126,6 +132,7 @@ spring:
 sftp:
   host: 139.186.66.121
 
+baseUrlSwigger: 127.0.0.1:5555
 
 
 ---

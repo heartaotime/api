@@ -2,6 +2,7 @@ package com.open.custom.api.control;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.gson.Gson;
 import com.jcraft.jsch.ChannelSftp;
 import com.open.custom.api.config.SFtpConfig;
 import com.open.custom.api.domain.common.CommonRequest;
@@ -14,6 +15,7 @@ import com.open.custom.api.service.IOpenAppInfoService;
 import com.open.custom.api.service.IOpenStaticDataService;
 import com.open.custom.api.service.RedisService;
 import com.open.custom.api.utils.DateUtils;
+import com.open.custom.api.utils.HttpClientUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -83,6 +85,17 @@ public class CommonRestController {
 
 
 //    @RequestMapping(value = "/upload", method = {RequestMethod.GET, RequestMethod.POST})
+
+
+    @ApiOperation(value = "获取网站的名称")
+    @PostMapping(value = "/getWebTitle")
+    public CommonResponse<Map> getWebTitle(@RequestBody CommonRequest<String> commonRequest) throws IOException {
+        String url = "https://api.qqsuu.cn/api/title?url=" + commonRequest.getParam();
+        CommonResponse<Map> commonResponse = new CommonResponse();
+        String res = HttpClientUtil.get(url);
+        commonResponse.setData(new Gson().fromJson(res, Map.class));
+        return commonResponse;
+    }
 
     @ApiOperation(value = "删除redis数据")
     @GetMapping(value = "/flushRedis")
