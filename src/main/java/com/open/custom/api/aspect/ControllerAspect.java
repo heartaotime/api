@@ -175,7 +175,7 @@ public class ControllerAspect {
             logger.info("SPEND TIME : {}ms\n", duraTime);
 
             // 记录接口日志
-            saveAccess(httpMethod, remoteAddr, classMethod, requestStr, responseStr, appCode, userCode, duraTime);
+            // saveAccess(httpMethod, remoteAddr, classMethod, requestStr, responseStr, appCode, userCode, duraTime);
         }
         return response;
     }

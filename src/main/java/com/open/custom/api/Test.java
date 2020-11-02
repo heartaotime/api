@@ -19,7 +19,8 @@ public class Test {
 
 
     public static void main(String[] args) throws Exception {
-        Workbook workbook = new XSSFWorkbook(new FileInputStream(new File("E:\\Download\\HW02-新店盈利测算汇总表-热风-老店（续约、移扩等）-沈阳大悦城店 (t).xlsx")));
+        Workbook workbook = new XSSFWorkbook(new FileInputStream(
+                new File("E:\\Download\\HW02-新店盈利测算汇总表-热风-老店（续约、移扩等）-沈阳大悦城店 (t).xlsx")));
 //        int numberOfSheets = workbook.getNumberOfSheets();
 //        for (int i = 0; i < numberOfSheets; i++) {
 //            Sheet sheet = workbook.getSheetAt(i);
@@ -52,22 +53,23 @@ public class Test {
 //         HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
 //        workbook.setForceFormulaRecalculation(true);
         //XSSFFormulaEvaluator.evaluateAllFormulaCells((XSSFWorkbook）book）;
-        workbook.getCreationHelper().createFormulaEvaluator().evaluateAll();
-
+//        workbook.getCreationHelper().createFormulaEvaluator().evaluateAll();
+        FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+        evaluator.setDebugEvaluationOutputForNextEval(true);
 
         System.out.println(workbook.getSheetName(0));
         Sheet firstSheet = workbook.getSheetAt(0);
-        Row r2 = firstSheet.getRow(59);
+        Row r2 = firstSheet.getRow(41);
         Cell cell = r2.getCell(1);
         int cellType = cell.getCellType();
 
         String cellFormula = cell.getCellFormula();
         System.out.println(cellFormula);
-//        FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-//        evaluator.evaluateInCell(cell);
-////        String cellValue = cell.getStringCellValue();
-//        String cellValue = cell.getNumericCellValue() + "";
-        System.out.println(cell.getStringCellValue());
+        cell.setCellFormula(cellFormula);
+        evaluator.evaluateInCell(cell);
+//        String cellValue = cell.getStringCellValue();
+        String cellValue = cell.getNumericCellValue() + "";
+        System.out.println(cellValue);
     }
 
 
