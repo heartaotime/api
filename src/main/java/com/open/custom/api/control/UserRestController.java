@@ -288,18 +288,36 @@ public class UserRestController {
         OpenUserInfoExtend param = commonRequest.getParam();
 
         String userCode = param.getUserCode();
+        String email = param.getEmail();
         String passWord = param.getPassWord();
         String verifyCode = param.getVerifyCode();
-        if (StringUtils.isEmpty(userCode) || StringUtils.isEmpty(passWord) || StringUtils.isEmpty(verifyCode)) {
+        if (((StringUtils.isEmpty(userCode) || "-1".equals(userCode)) && StringUtils.isEmpty(email))
+                || StringUtils.isEmpty(passWord) || StringUtils.isEmpty(verifyCode)) {
             throw new BusiException("请求参数不能为空");
         }
 
-        OpenUserInfo userInfo = iOpenUserInfoService.getUserByCode(userCode);
-        if (userInfo == null) {
-            throw new BusiException("该用户不存在[" + userCode + "]");
+        OpenUserInfo userInfo = null;
+        if (!StringUtils.isEmpty(userCode) && !"-1".equals(userCode)) {
+            userInfo = iOpenUserInfoService.getUserByCode(userCode);
+        } else if (!StringUtils.isEmpty(email)) {
+            OpenUserInfoExample example = new OpenUserInfoExample();
+            OpenUserInfoExample.Criteria criteria = example.createCriteria();
+            criteria.andAppCodeEqualTo(appCode);
+            criteria.andEmailEqualTo(email);
+            criteria.andStateEqualTo(1);
+            List<OpenUserInfo> openUserInfos = iOpenUserInfoService.selectByExample(example);
+            if (!CollectionUtils.isEmpty(openUserInfos)) {
+                userInfo = openUserInfos.get(0);
+            }
         }
 
-        String email = userInfo.getEmail();
+        if (userInfo == null) {
+            throw new BusiException("该用户不存在");
+        } else {
+            email = userInfo.getEmail();
+        }
+
+        // String email = userInfo.getEmail();
         // 校验 验证码
         Object verifyCodeObj = redisService.get(appCode + "|" + email);
         if (verifyCodeObj == null || !verifyCodeObj.toString().equals(verifyCode.trim())) {
