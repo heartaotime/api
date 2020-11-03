@@ -97,11 +97,12 @@ public class CommonRestController {
         return commonResponse;
     }
 
-    @ApiOperation(value = "删除redis数据")
-    @GetMapping(value = "/flushRedis")
-    public CommonResponse<String> flushRedis(CommonRequest<String> commonRequest) throws IOException {
+    @ApiOperation(value = "刷新redis数据")
+    @GetMapping(value = "/freshRedis")
+    public CommonResponse<String> freshRedis(CommonRequest<String> commonRequest) throws IOException {
         CommonResponse<String> commonResponse = new CommonResponse();
-        redisService.del(OPEN_APP_INFO, OPEN_STATIC_DATA);
+        redisService.del(OPEN_APP_INFO);
+        iOpenStaticDataService.saveData2Redis();
         return commonResponse;
     }
 
