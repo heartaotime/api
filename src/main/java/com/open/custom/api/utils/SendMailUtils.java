@@ -18,7 +18,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -48,7 +50,7 @@ public class SendMailUtils {
     public void init() {
         instance = this;
         ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutor.scheduleWithFixedDelay(instance.createRunnable(), 0, 1, TimeUnit.SECONDS);
+        scheduledExecutor.scheduleWithFixedDelay(instance.createRunnable(), 0, 5, TimeUnit.SECONDS);
     }
 
     private SendMailUtils() {
@@ -84,63 +86,71 @@ public class SendMailUtils {
             @Override
             public void run() {
                 RLock lock = null;
-                try {
-                    lock = redissonClient.getLock(MAIL_MESSAGE_LOCK);
-                    // 等待 5 s 自动解锁 6 s
-                    boolean flag = lock.tryLock(5, 6, TimeUnit.SECONDS);
-                    if (!flag) {
-                        // 获取锁不成功
-                        log.info("获取锁失败: " + MAIL_MESSAGE_LOCK);
-                        return;
-                    }
+                RMap<Object, Object> messages = redissonClient.getMap(MAIL_MESSAGE);
+                if (CollectionUtils.isEmpty(messages)) {
+                    return;
+                }
 
+                Set<Map.Entry<Object, Object>> entries = messages.entrySet();
+                Iterator<Map.Entry<Object, Object>> iterator = entries.iterator();
 
-                    RMap<Object, Object> messages = redissonClient.getMap(MAIL_MESSAGE);
-                    if (CollectionUtils.isEmpty(messages)) {
-                        return;
-                    }
-                    messages.forEach((key, value) -> {
-                        String lockId = "";
+                while (iterator.hasNext()) {
+                    Map.Entry<Object, Object> next = iterator.next();
+                    Object key = next.getKey();
+                    Object value = next.getValue();
+
+                    String lockId = "";
+                    try {
+                        if (key == null || value == null) {
+                            iterator.remove();
+                            continue;
+                        }
+                        String uuid = (String) key;
+                        if (StringUtils.isEmpty(uuid)) {
+                            iterator.remove();
+                            continue;
+                        }
+
+                        String messageStr = (String) value;
+                        if (StringUtils.isEmpty(messageStr)) {
+                            iterator.remove();
+                            continue;
+                        }
+                        SimpleMailMessage message = gson.fromJson(messageStr, SimpleMailMessage.class);
+                        String[] to = message.getTo();
+                        if (to == null || to.length < 1) {
+                            iterator.remove();
+                            continue;
+                        }
+                        StringBuffer toS = new StringBuffer();
+                        for (String item : to) {
+                            toS.append(item).append(", ");
+                        }
                         try {
-                            if (key == null || value == null) {
-                                return; // 相当于 continue
-                            }
-                            String uuid = (String) key;
-                            if (StringUtils.isEmpty(uuid)) {
+                            lock = redissonClient.getLock(MAIL_MESSAGE_LOCK + "|" + uuid);
+                            // 等待 1 s 自动解锁 6 s
+                            boolean flag = lock.tryLock(1, 10, TimeUnit.SECONDS);
+                            if (!flag) {
+                                // 获取锁不成功
+                                log.info("获取锁失败: " + MAIL_MESSAGE_LOCK + "|" + uuid);
                                 return;
-                            }
-
-                            String messageStr = (String) value;
-                            if (StringUtils.isEmpty(messageStr)) {
-                                return;
-                            }
-                            SimpleMailMessage message = gson.fromJson(messageStr, SimpleMailMessage.class);
-                            String[] to = message.getTo();
-                            if (to == null || to.length < 1) {
-                                return;
-                            }
-                            StringBuffer toS = new StringBuffer();
-                            for (String item : to) {
-                                toS.append(item).append(", ");
                             }
                             log.info("Send Mail to: " + toS.toString().substring(0, toS.toString().lastIndexOf(",")));
-                            try {
-                                mailSender.send(message);
-                            } catch (MailException e) {
-                                log.error("sendEMail catch MailException {}", e);
+                            mailSender.send(message);
+                            iterator.remove();
+                        } catch (MailException e) {
+                            log.error("sendEMail catch MailException {}", e);
+                        } finally {
+                            if (lock != null) {
+                                lock.unlock();
                             }
-                        } catch (Exception e) {
-                            log.error("sendEMail catch Exception {}", e);
                         }
-                    });
-                    messages.delete();
-                } catch (Exception e) {
-                    log.error("sendEMail catch Exception {}", e);
-                } finally {
-                    if (lock != null) {
-                        lock.unlock();
+                    } catch (Exception e) {
+                        log.error("sendEMail catch Exception {}", e);
                     }
                 }
+//                    messages.forEach((key, value) -> {});
+//                    messages.delete();
             }
         };
     }
