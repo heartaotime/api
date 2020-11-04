@@ -50,7 +50,7 @@ public class SendMailUtils {
     public void init() {
         instance = this;
         ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutor.scheduleWithFixedDelay(instance.createRunnable(), 0, 5, TimeUnit.SECONDS);
+        scheduledExecutor.scheduleWithFixedDelay(instance.createRunnable(), 0, 1, TimeUnit.SECONDS);
     }
 
     private SendMailUtils() {
@@ -77,8 +77,8 @@ public class SendMailUtils {
     public static void addMsg(SimpleMailMessage message) {
         String uuid = UUID.randomUUID().toString();
         message.setFrom(instance.mailUserName);
-        RMap<Object, Object> map = instance.redissonClient.getMap(MAIL_MESSAGE);
-        map.put(uuid, gson.toJson(message));
+        RMap<Object, Object> messages = instance.redissonClient.getMap(MAIL_MESSAGE);
+        messages.put(uuid, gson.toJson(message));
     }
 
     private Runnable createRunnable() {
@@ -86,21 +86,33 @@ public class SendMailUtils {
             @Override
             public void run() {
                 RLock lock = null;
-                RMap<Object, Object> messages = redissonClient.getMap(MAIL_MESSAGE);
-                if (CollectionUtils.isEmpty(messages)) {
-                    return;
-                }
+                try {
+                    lock = redissonClient.getLock(MAIL_MESSAGE_LOCK);
+//                    log.error(redissonClient.getLock(MAIL_MESSAGE_LOCK + "1").tryLock() + "");
+//                    log.error(redissonClient.getLock(MAIL_MESSAGE_LOCK + "2").tryLock() + "");
+//                    boolean flag = lock.tryLock(1, 30, TimeUnit.SECONDS);
+                    boolean flag = lock.tryLock(); // 开启看门狗模式
+                    if (!flag) {
+                        // 获取锁不成功
+                        log.info("获取锁失败: " + MAIL_MESSAGE_LOCK);
+                        return;
+                    }
 
-                Set<Map.Entry<Object, Object>> entries = messages.entrySet();
-                Iterator<Map.Entry<Object, Object>> iterator = entries.iterator();
+                    RMap<Object, Object> messages = redissonClient.getMap(MAIL_MESSAGE);
+                    if (CollectionUtils.isEmpty(messages)) {
+                        return;
+                    }
 
-                while (iterator.hasNext()) {
-                    Map.Entry<Object, Object> next = iterator.next();
-                    Object key = next.getKey();
-                    Object value = next.getValue();
+                    Set<Map.Entry<Object, Object>> entries = messages.entrySet();
+                    Iterator<Map.Entry<Object, Object>> iterator = entries.iterator();
 
-                    String lockId = "";
-                    try {
+                    while (iterator.hasNext()) {
+                        Map.Entry<Object, Object> next = iterator.next();
+                        Object key = next.getKey();
+                        Object value = next.getValue();
+
+                        String lockId = "";
+
                         if (key == null || value == null) {
                             iterator.remove();
                             continue;
@@ -126,32 +138,25 @@ public class SendMailUtils {
                         for (String item : to) {
                             toS.append(item).append(", ");
                         }
+
                         try {
-                            lock = redissonClient.getLock(MAIL_MESSAGE_LOCK + "|" + uuid);
-                            // 等待 1 s 自动解锁 6 s
-                            boolean flag = lock.tryLock(1, 10, TimeUnit.SECONDS);
-                            if (!flag) {
-                                // 获取锁不成功
-                                log.info("获取锁失败: " + MAIL_MESSAGE_LOCK + "|" + uuid);
-                                return;
-                            }
                             log.info("Send Mail to: " + toS.toString().substring(0, toS.toString().lastIndexOf(",")));
                             mailSender.send(message);
                             iterator.remove();
-                        } catch (MailException e) {
-                            log.error("sendEMail catch MailException {}", e);
-                        } finally {
-                            if (lock != null) {
-                                lock.unlock();
-                            }
+                        } catch (Exception e) {
+                            log.error("sendEMail catch Exception {}", e);
                         }
-                    } catch (Exception e) {
-                        log.error("sendEMail catch Exception {}", e);
+                    }
+                } catch (Exception e) {
+                    log.error("sendEMail catch Exception {}", e);
+                } finally {
+                    if (lock != null) {
+                        lock.unlock();
                     }
                 }
+            }
 //                    messages.forEach((key, value) -> {});
 //                    messages.delete();
-            }
         };
     }
 }
