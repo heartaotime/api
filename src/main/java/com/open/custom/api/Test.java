@@ -2,10 +2,6 @@ package com.open.custom.api;
 
 import com.google.gson.Gson;
 import com.open.custom.api.model.OpenStaticData;
-import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,57 +15,57 @@ public class Test {
 
 
     public static void main(String[] args) throws Exception {
-        Workbook workbook = new XSSFWorkbook(new FileInputStream(
-                new File("E:\\Download\\HW02-新店盈利测算汇总表-热风-老店（续约、移扩等）-沈阳大悦城店 (t).xlsx")));
-//        int numberOfSheets = workbook.getNumberOfSheets();
-//        for (int i = 0; i < numberOfSheets; i++) {
-//            Sheet sheet = workbook.getSheetAt(i);
-//            for (int j = 1; j < sheet.getPhysicalNumberOfRows(); j++) { // 获取每行
-//                XSSFRow row = (XSSFRow) sheet.getRow(j);
-//                if (row != null) {
-//                    int physicalNumberOfCells = row.getPhysicalNumberOfCells();
-//                    for (int k = 0; k < physicalNumberOfCells; k++) { // 获取每个单元格
-//                        Cell cell = row.getCell(k);
-//                        if (cell == null) {
-//                            continue;
-//                        }
-//                        switch (cell.getCellType()) {
-//                            case Cell.CELL_TYPE_STRING:
-//                                break;
-//                            case Cell.CELL_TYPE_NUMERIC:
-//                                break;
-//                            case Cell.CELL_TYPE_BOOLEAN:
-//                                break;
-//                            case Cell.CELL_TYPE_FORMULA:
-//                                System.out.println(cell.getCellFormula());
-//                                break;
-//                            default:
-//                                break;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//         HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
-//        workbook.setForceFormulaRecalculation(true);
-        //XSSFFormulaEvaluator.evaluateAllFormulaCells((XSSFWorkbook）book）;
-//        workbook.getCreationHelper().createFormulaEvaluator().evaluateAll();
-        FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-        evaluator.setDebugEvaluationOutputForNextEval(true);
-
-        System.out.println(workbook.getSheetName(0));
-        Sheet firstSheet = workbook.getSheetAt(0);
-        Row r2 = firstSheet.getRow(41);
-        Cell cell = r2.getCell(1);
-        int cellType = cell.getCellType();
-
-        String cellFormula = cell.getCellFormula();
-        System.out.println(cellFormula);
-        cell.setCellFormula(cellFormula);
-        evaluator.evaluateInCell(cell);
-//        String cellValue = cell.getStringCellValue();
-        String cellValue = cell.getNumericCellValue() + "";
-        System.out.println(cellValue);
+//        Workbook workbook = new XSSFWorkbook(new FileInputStream(
+//                new File("E:\\Download\\HW02-新店盈利测算汇总表-热风-老店（续约、移扩等）-沈阳大悦城店 (t).xlsx")));
+////        int numberOfSheets = workbook.getNumberOfSheets();
+////        for (int i = 0; i < numberOfSheets; i++) {
+////            Sheet sheet = workbook.getSheetAt(i);
+////            for (int j = 1; j < sheet.getPhysicalNumberOfRows(); j++) { // 获取每行
+////                XSSFRow row = (XSSFRow) sheet.getRow(j);
+////                if (row != null) {
+////                    int physicalNumberOfCells = row.getPhysicalNumberOfCells();
+////                    for (int k = 0; k < physicalNumberOfCells; k++) { // 获取每个单元格
+////                        Cell cell = row.getCell(k);
+////                        if (cell == null) {
+////                            continue;
+////                        }
+////                        switch (cell.getCellType()) {
+////                            case Cell.CELL_TYPE_STRING:
+////                                break;
+////                            case Cell.CELL_TYPE_NUMERIC:
+////                                break;
+////                            case Cell.CELL_TYPE_BOOLEAN:
+////                                break;
+////                            case Cell.CELL_TYPE_FORMULA:
+////                                System.out.println(cell.getCellFormula());
+////                                break;
+////                            default:
+////                                break;
+////                        }
+////                    }
+////                }
+////            }
+////        }
+////         HSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
+////        workbook.setForceFormulaRecalculation(true);
+//        //XSSFFormulaEvaluator.evaluateAllFormulaCells((XSSFWorkbook）book）;
+////        workbook.getCreationHelper().createFormulaEvaluator().evaluateAll();
+//        FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+//        evaluator.setDebugEvaluationOutputForNextEval(true);
+//
+//        System.out.println(workbook.getSheetName(0));
+//        Sheet firstSheet = workbook.getSheetAt(0);
+//        Row r2 = firstSheet.getRow(41);
+//        Cell cell = r2.getCell(1);
+//        int cellType = cell.getCellType();
+//
+//        String cellFormula = cell.getCellFormula();
+//        System.out.println(cellFormula);
+//        cell.setCellFormula(cellFormula);
+//        evaluator.evaluateInCell(cell);
+////        String cellValue = cell.getStringCellValue();
+//        String cellValue = cell.getNumericCellValue() + "";
+//        System.out.println(cellValue);
     }
 
 

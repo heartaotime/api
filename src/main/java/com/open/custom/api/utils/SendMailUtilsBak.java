@@ -2,10 +2,6 @@ package com.open.custom.api.utils;
 
 import com.google.gson.Gson;
 import com.open.custom.api.service.RedisService;
-import org.redisson.api.RLock;
-import org.redisson.api.RMap;
-import org.redisson.api.RObject;
-import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,33 +33,32 @@ import java.util.concurrent.TimeUnit;
  * @Return
  */
 @Component
-public class SendMailUtils {
+public class SendMailUtilsBak {
 
 
-    private static final Logger log = LoggerFactory.getLogger(SendMailUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(SendMailUtilsBak.class);
 
-    public static SendMailUtils instance;
+    public static SendMailUtilsBak instance;
 
     @PostConstruct
     public void init() {
-        instance = this;
-        ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutor.scheduleWithFixedDelay(instance.createRunnable(), 0, 1, TimeUnit.SECONDS);
+//        instance = this;
+//        ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+//        scheduledExecutor.scheduleWithFixedDelay(instance.createRunnable(), 0, 1, TimeUnit.SECONDS);
     }
 
-    private SendMailUtils() {
+    private SendMailUtilsBak() {
 
     }
 
 
     private static Gson gson = new Gson();
 
+    @Autowired
+    private RedisService redisService;
 
     @Autowired
     private JavaMailSender mailSender;
-
-    @Autowired
-    private RedissonClient redissonClient;
 
     private static final String MAIL_MESSAGE = "MAIL_MESSAGE";
     private static final String MAIL_MESSAGE_LOCK = "MAIL_MESSAGE_LOCK";
@@ -72,30 +67,31 @@ public class SendMailUtils {
     private String mailUserName;
 
 
+    private static Map<String, Integer> failedMsg = new ConcurrentHashMap<>();
+
+
     public static void addMsg(SimpleMailMessage message) {
         String uuid = UUID.randomUUID().toString();
         message.setFrom(instance.mailUserName);
-        RMap<Object, Object> map = instance.redissonClient.getMap(MAIL_MESSAGE);
-        map.put(uuid, gson.toJson(message));
+        instance.redisService.hset(MAIL_MESSAGE, uuid, gson.toJson(message));
     }
 
     private Runnable createRunnable() {
         return new Runnable() {
             @Override
             public void run() {
-                RLock lock = null;
+                boolean lock = false;
                 try {
-                    lock = redissonClient.getLock(MAIL_MESSAGE_LOCK);
-                    // 等待 5 s 自动解锁 6 s
-                    boolean flag = lock.tryLock(5, 6, TimeUnit.SECONDS);
-                    if (!flag) {
+                    // 获取锁失败
+                    lock = redisService.getLock(MAIL_MESSAGE_LOCK, 2000);
+                    if (!lock) {
                         // 获取锁不成功
                         log.info("获取锁失败: " + MAIL_MESSAGE_LOCK);
                         return;
                     }
+//                    log.info("获取锁成功: " + MAIL_MESSAGE_LOCK);
 
-
-                    RMap<Object, Object> messages = redissonClient.getMap(MAIL_MESSAGE);
+                    Map<Object, Object> messages = redisService.hmget(MAIL_MESSAGE);
                     if (CollectionUtils.isEmpty(messages)) {
                         return;
                     }
@@ -124,21 +120,30 @@ public class SendMailUtils {
                                 toS.append(item).append(", ");
                             }
                             log.info("Send Mail to: " + toS.toString().substring(0, toS.toString().lastIndexOf(",")));
+                            int time = 0;
                             try {
                                 mailSender.send(message);
                             } catch (MailException e) {
                                 log.error("sendEMail catch MailException {}", e);
+                                time = failedMsg.get(lockId) + 1;
+                                failedMsg.put(lockId, time);
+                            } finally {
+                                // 成功 或者 已经失败 3 次
+                                if (time == 0 || time >= 3) {
+                                    redisService.hdel(MAIL_MESSAGE, uuid);
+                                }
                             }
                         } catch (Exception e) {
                             log.error("sendEMail catch Exception {}", e);
                         }
                     });
-                    messages.delete();
                 } catch (Exception e) {
                     log.error("sendEMail catch Exception {}", e);
                 } finally {
-                    if (lock != null) {
-                        lock.unlock();
+                    if (lock) {
+                        // 拿到锁 完成后就需要释放锁
+//                        log.info("释放锁: " + MAIL_MESSAGE_LOCK);
+                        redisService.releaseLock(MAIL_MESSAGE_LOCK);
                     }
                 }
             }
