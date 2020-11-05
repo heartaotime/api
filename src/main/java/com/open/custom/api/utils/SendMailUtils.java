@@ -1,16 +1,13 @@
 package com.open.custom.api.utils;
 
 import com.google.gson.Gson;
-import com.open.custom.api.service.RedisService;
 import org.redisson.api.RLock;
 import org.redisson.api.RMap;
-import org.redisson.api.RObject;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
@@ -22,7 +19,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -50,7 +46,7 @@ public class SendMailUtils {
     public void init() {
         instance = this;
         ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutor.scheduleWithFixedDelay(instance.createRunnable(), 0, 1, TimeUnit.SECONDS);
+        scheduledExecutor.scheduleWithFixedDelay(instance.createRunnable(), 5, 1, TimeUnit.SECONDS);
     }
 
     private SendMailUtils() {
@@ -64,8 +60,12 @@ public class SendMailUtils {
     @Autowired
     private JavaMailSender mailSender;
 
+//    @Autowired
+//    private RedissonClient redissonClient;
+
     @Autowired
     private RedissonClient redissonClient;
+
 
     private static final String MAIL_MESSAGE = "MAIL_MESSAGE";
     private static final String MAIL_MESSAGE_LOCK = "MAIL_MESSAGE_LOCK";
@@ -85,18 +85,30 @@ public class SendMailUtils {
         return new Runnable() {
             @Override
             public void run() {
+//                log.info("进入发送短信线程");
                 RLock lock = null;
                 try {
-                    lock = redissonClient.getLock(MAIL_MESSAGE_LOCK);
-//                    log.error(redissonClient.getLock(MAIL_MESSAGE_LOCK + "1").tryLock() + "");
-//                    log.error(redissonClient.getLock(MAIL_MESSAGE_LOCK + "2").tryLock() + "");
-//                    boolean flag = lock.tryLock(1, 30, TimeUnit.SECONDS);
-                    boolean flag = lock.tryLock(); // 开启看门狗模式
-                    if (!flag) {
-                        // 获取锁不成功
-                        log.info("获取锁失败: " + MAIL_MESSAGE_LOCK);
-                        return;
+                    while (true) {
+                        lock = redissonClient.getLock(MAIL_MESSAGE_LOCK);
+                        boolean flag = lock.tryLock();
+//                        log.info("获取锁的结果:" + flag);
+                        if (flag) {
+                            break;
+                        } else {
+                            log.info("获取锁失败: " + MAIL_MESSAGE_LOCK);
+                            Thread.sleep(1000);
+                        }
                     }
+//                    lock = redissonClient.getLock(MAIL_MESSAGE_LOCK);
+////                    log.error(redissonClient.getLock(MAIL_MESSAGE_LOCK + "1").tryLock() + "");
+////                    log.error(redissonClient.getLock(MAIL_MESSAGE_LOCK + "2").tryLock() + "");
+////                    boolean flag = lock.tryLock(1, 30, TimeUnit.SECONDS);
+//                    boolean flag = lock.tryLock(); // 开启看门狗模式
+//                    if (!flag) {
+////                        // 获取锁不成功
+//                        log.info("获取锁失败: " + MAIL_MESSAGE_LOCK);
+//                        return;
+//                    }
 
                     RMap<Object, Object> messages = redissonClient.getMap(MAIL_MESSAGE);
                     if (CollectionUtils.isEmpty(messages)) {
@@ -110,8 +122,6 @@ public class SendMailUtils {
                         Map.Entry<Object, Object> next = iterator.next();
                         Object key = next.getKey();
                         Object value = next.getValue();
-
-                        String lockId = "";
 
                         if (key == null || value == null) {
                             iterator.remove();

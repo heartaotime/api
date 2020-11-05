@@ -1,0 +1,10 @@
+#Redisson配置
+singleServerConfig:
+  address: "redis://139.186.66.121:6000"
+  password: 1qaz!QAZ2wsx@WSX
+
+threads: 0
+nettyThreads: 0
+codec:
+  class: "org.redisson.codec.JsonJacksonCodec"
+transportMode: "NIO"
