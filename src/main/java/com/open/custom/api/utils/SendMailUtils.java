@@ -1,6 +1,7 @@
 package com.open.custom.api.utils;
 
 import com.google.gson.Gson;
+import org.redisson.api.RFuture;
 import org.redisson.api.RLock;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
@@ -88,6 +89,7 @@ public class SendMailUtils {
 //                log.info("进入发送短信线程");
                 RLock lock = null;
                 try {
+                    // 拿不到锁不退出
                     while (true) {
                         lock = redissonClient.getLock(MAIL_MESSAGE_LOCK);
                         boolean flag = lock.tryLock();
@@ -99,16 +101,10 @@ public class SendMailUtils {
                             Thread.sleep(1000);
                         }
                     }
-//                    lock = redissonClient.getLock(MAIL_MESSAGE_LOCK);
-////                    log.error(redissonClient.getLock(MAIL_MESSAGE_LOCK + "1").tryLock() + "");
-////                    log.error(redissonClient.getLock(MAIL_MESSAGE_LOCK + "2").tryLock() + "");
-////                    boolean flag = lock.tryLock(1, 30, TimeUnit.SECONDS);
-//                    boolean flag = lock.tryLock(); // 开启看门狗模式
-//                    if (!flag) {
-////                        // 获取锁不成功
-//                        log.info("获取锁失败: " + MAIL_MESSAGE_LOCK);
-//                        return;
-//                    }
+                    // Redisson分布式可重入公平锁也是实现了java.util.concurrent.locks.Lock接口的一种RLock对象。
+                    // 在提供了自动过期解锁功能的同时，保证了当多个Redisson客户端线程同时请求加锁时，优先分配给先发出请求的线程。
+//                    lock = redissonClient.getFairLock(MAIL_MESSAGE_LOCK);
+//                    lock.lock();
 
                     RMap<Object, Object> messages = redissonClient.getMap(MAIL_MESSAGE);
                     if (CollectionUtils.isEmpty(messages)) {
@@ -157,6 +153,7 @@ public class SendMailUtils {
                             log.error("sendEMail catch Exception {}", e);
                         }
                     }
+
                 } catch (Exception e) {
                     log.error("sendEMail catch Exception {}", e);
                 } finally {
