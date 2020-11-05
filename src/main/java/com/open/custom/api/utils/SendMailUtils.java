@@ -87,20 +87,9 @@ public class SendMailUtils {
             @Override
             public void run() {
 //                log.info("进入发送短信线程");
-                RLock lock = null;
                 try {
                     // 拿不到锁不退出
-                    while (true) {
-                        lock = redissonClient.getLock(MAIL_MESSAGE_LOCK);
-                        boolean flag = lock.tryLock();
-//                        log.info("获取锁的结果:" + flag);
-                        if (flag) {
-                            break;
-                        } else {
-                            log.info("获取锁失败: " + MAIL_MESSAGE_LOCK);
-                            Thread.sleep(1000);
-                        }
-                    }
+                    LockUtil.getUntilHaveLock(MAIL_MESSAGE_LOCK);
                     // Redisson分布式可重入公平锁也是实现了java.util.concurrent.locks.Lock接口的一种RLock对象。
                     // 在提供了自动过期解锁功能的同时，保证了当多个Redisson客户端线程同时请求加锁时，优先分配给先发出请求的线程。
 //                    lock = redissonClient.getFairLock(MAIL_MESSAGE_LOCK);
@@ -157,9 +146,7 @@ public class SendMailUtils {
                 } catch (Exception e) {
                     log.error("sendEMail catch Exception {}", e);
                 } finally {
-                    if (lock != null) {
-                        lock.unlock();
-                    }
+                    LockUtil.unLock(MAIL_MESSAGE_LOCK);
                 }
             }
 //                    messages.forEach((key, value) -> {});
