@@ -68,6 +68,10 @@ public class CommonRestController {
     @Value("${uploadpath.opentemp}")
     private String openTempPath;
 
+
+    @Value("${fileUrlPath}")
+    private String fileUrlPath;
+
     @Value("${baseUrl}")
     private String baseUrl;
 
@@ -141,7 +145,7 @@ public class CommonRestController {
         String fileName = UUID.randomUUID().toString().replaceAll("-", "") + type;
         ChannelSftp session = sftpSessionFactory.getSession(path);
         session.put(file.getInputStream(), fileName);
-        response.setData(baseUrl + sFtpConfig.getBasePath() + path + "/" + fileName);
+        response.setData(baseUrl + fileUrlPath + path + "/" + fileName);
 
         return response;
     }

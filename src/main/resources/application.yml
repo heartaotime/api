@@ -90,7 +90,7 @@ sftp:
   # 密码
   password: 1qaz!QAZ
   # 文件存储的根路径
-  basePath: /file/
+  basePath: /ydata/file/
   # session连接超时时间
   sessionConnectTimeout: 30000
   # channel连接超时时间
@@ -101,15 +101,16 @@ sftp:
 
 userhome: /root
 
-
+# 文件的访问路径
+fileUrlPath: /file/
 uploadpath:
   myfile: myfile/
   open: open/
   opentemp: opentemp/
 
-baseUrl: https://www.myindex.top
+baseUrl: https://www.ystel.cn
 
-baseUrlSwigger: www.myindex.top
+baseUrlSwigger: www.ystel.cn
 
 
 custCacheKey:
@@ -124,13 +125,13 @@ custCacheKey:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:mysql://139.186.66.121:3306/app?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://175.24.235.89:3306/app?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
 
   redis:
-    host: 139.186.66.121
+    host: 175.24.235.89
 
 sftp:
-  host: 139.186.66.121
+  host: 175.24.235.89
 
 baseUrlSwigger: 127.0.0.1:5555
 
