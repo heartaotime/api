@@ -137,10 +137,10 @@ public class SendMailUtils {
                         try {
                             log.info("Send Mail to: " + toS.toString().substring(0, toS.toString().lastIndexOf(",")));
                             mailSender.send(message);
-                            iterator.remove();
                         } catch (Exception e) {
                             log.error("sendEMail catch Exception {}", e);
                         }
+                        iterator.remove();
                     }
 
                 } catch (Exception e) {
