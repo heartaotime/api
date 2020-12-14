@@ -1,8 +1,10 @@
 package com.open.custom.api.config;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Data
 @Component
 public class SFtpConfig {
     /**
@@ -52,69 +54,5 @@ public class SFtpConfig {
      */
     @Value("${sftp.channelConnectedTimeout}")
     private Integer channelConnectedTimeout;
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getBasePath() {
-        return basePath;
-    }
-
-    public void setBasePath(String basePath) {
-        this.basePath = basePath;
-    }
-
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
-    }
-
-    public Integer getSessionConnectTimeout() {
-        return sessionConnectTimeout;
-    }
-
-    public void setSessionConnectTimeout(Integer sessionConnectTimeout) {
-        this.sessionConnectTimeout = sessionConnectTimeout;
-    }
-
-    public Integer getChannelConnectedTimeout() {
-        return channelConnectedTimeout;
-    }
-
-    public void setChannelConnectedTimeout(Integer channelConnectedTimeout) {
-        this.channelConnectedTimeout = channelConnectedTimeout;
-    }
 
 }
