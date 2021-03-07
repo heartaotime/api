@@ -1,5 +1,6 @@
-package com.open.custom.api;
+package com.open.custom.api.test;
 
+import cn.hutool.core.date.DateUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.LongSerializationPolicy;
@@ -59,54 +60,80 @@ public class Test {
 
     public static void main(String[] args) throws Exception {
 
-        Gson gson = new Gson();
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setLongSerializationPolicy(LongSerializationPolicy.STRING);
-        gson = gsonBuilder.create();
+        Date[] d = new Date[12];
+        Date[] d1 = new Date[12];
+        Calendar c = Calendar.getInstance();
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("test", 1.2);
-        String s = gson.toJson(map);
-        Map<String, Object> map1 = gson.fromJson(s, Map.class);
-        System.out.println(map1.toString());
-        Set<Map.Entry<String, Object>> entries = map1.entrySet();
-        for (Map.Entry<String, Object> entry : entries) {
-            String key = entry.getKey();
-//            if ("java.lang.Integer".equals(orgColType)) {
-//
-//            }
-            double v = Double.parseDouble(entry.getValue() + "");
-            BigDecimal bg = new BigDecimal(v);
-            entry.setValue(bg.intValue());
-
+        for (int i = 0; i < 12; i++) {
+            c.add(Calendar.MONTH, -1);
+            d[i] = c.getTime();
+            System.out.println(new SimpleDateFormat("yyyyMM").format(c.getTime()));
         }
-        System.out.println(map1.toString());
 
-        Class<in> inClass = in.class;
-        Field date = inClass.getDeclaredField("date");
-//        date.setAccessible(true);
-        Type genericType = date.getGenericType();
-        String typeName = genericType.getTypeName();
-        System.out.println(typeName);
+        for (int i = 12; i < 24; i++) {
+            c.add(Calendar.MONTH, -1);
+            d1[i - 12] = c.getTime();
+        }
 
 
-        System.out.println("河南省郑州市惠济区文化北路与开元路交汇处向西300米惠济万达广场2楼2006#热风".equals("河南省郑州市惠济区文化北路与开元路交汇处向西300米惠济万达广场2楼2006#热风"));
+//        for (int i = 0; i < 12; i++) {
+//            c.add(Calendar.MONTH, -1);
+//
+//        }
+
+//        String now = DateUtil.now();
+//        System.out.println(now);
 
 
-        Test test = new Test();
-        Date now = new Date();
-        System.out.println(now.getTime());
-        long a = 1606728462217l;
-        long b = 1606728462218l;
-        System.out.println(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date(a)));
-        System.out.println(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date(b)));
-        Object o1 = new BigDecimal("1.0");
-        Object o2 = new BigDecimal("1.00");
-        System.out.println(String.valueOf(o1));
-        System.out.println(String.valueOf(o2));
-//        System.out.println(o2);
-        System.out.println(test.isEqual(o1, o2));
+//        Gson gson = new Gson();
+//
+//        GsonBuilder gsonBuilder = new GsonBuilder();
+//        gsonBuilder.setLongSerializationPolicy(LongSerializationPolicy.STRING);
+//        gson = gsonBuilder.create();
+//
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("test", 1.2);
+//        String s = gson.toJson(map);
+//        Map<String, Object> map1 = gson.fromJson(s, Map.class);
+//        System.out.println(map1.toString());
+//        Set<Map.Entry<String, Object>> entries = map1.entrySet();
+//        for (Map.Entry<String, Object> entry : entries) {
+//            String key = entry.getKey();
+////            if ("java.lang.Integer".equals(orgColType)) {
+////
+////            }
+//            double v = Double.parseDouble(entry.getValue() + "");
+//            BigDecimal bg = new BigDecimal(v);
+//            entry.setValue(bg.intValue());
+//
+//        }
+//        System.out.println(map1.toString());
+//
+//        Class<in> inClass = in.class;
+//        Field date = inClass.getDeclaredField("date");
+////        date.setAccessible(true);
+//        Type genericType = date.getGenericType();
+//        String typeName = genericType.getTypeName();
+//        System.out.println(typeName);
+//
+//
+//        System.out.println("河南省郑州市惠济区文化北路与开元路交汇处向西300米惠济万达广场2楼2006#热风".equals("河南省郑州市惠济区文化北路与开元路交汇处向西300米惠济万达广场2楼2006#热风"));
+//
+//
+//        Test test = new Test();
+//        Date now = new Date();
+//        System.out.println(now.getTime());
+//        long a = 1606728462217l;
+//        long b = 1606728462218l;
+//        System.out.println(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date(a)));
+//        System.out.println(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date(b)));
+//        Object o1 = new BigDecimal("1.0");
+//        Object o2 = new BigDecimal("1.00");
+//        System.out.println(String.valueOf(o1));
+//        System.out.println(String.valueOf(o2));
+////        System.out.println(o2);
+//        System.out.println(test.isEqual(o1, o2));
 
 //        String str = "";
 //        int ww = 12;
