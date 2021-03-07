@@ -5,7 +5,9 @@ import com.open.custom.api.config.PrintlnLog;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -47,7 +49,13 @@ public class LogAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
 
-        String methodDetailDescription = this.getAspectMethodLogDescJP(joinPoint);
+        // String methodDetailDescription = this.getAspectMethodLogDescJP(joinPoint);
+
+        PrintlnLog annotationLog = this.getAnnotationLog(joinPoint);
+        if (annotationLog == null) {
+            return;
+        }
+        String methodDetailDescription = annotationLog.description();
 
         log.info("------------------------------- start -------------------------------");
         /**
@@ -132,6 +140,20 @@ public class LogAspect {
         String methodName = joinPoint.getSignature().getName();
         Object[] arguments = joinPoint.getArgs();
         return getAspectMethodLogDesc(targetName, methodName, arguments);
+    }
+
+    /**
+     * 是否存在注解，如果存在就获取
+     */
+    private PrintlnLog getAnnotationLog(JoinPoint joinPoint) throws Exception {
+        Signature signature = joinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature) signature;
+        Method method = methodSignature.getMethod();
+
+        if (method != null) {
+            return method.getAnnotation(PrintlnLog.class);
+        }
+        return null;
     }
 
     /**
